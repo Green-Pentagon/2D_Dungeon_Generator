@@ -9,8 +9,8 @@ public class Configure : MonoBehaviour
     public const float UNIT_SIZE = 1.0f;
 
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
-    private int[] roomWidthRange = { 1, 100 };
-    private int[] roomHeightRange = { 1, 100 };
+    private int[] roomWidthRange = { 3, 100 };
+    private int[] roomHeightRange = { 3, 100 };
     //private int[] roomCountRange = { 1, 6 };
     //----------------------------------
 
@@ -20,19 +20,19 @@ public class Configure : MonoBehaviour
     //room count sliders
     [Range(1, 6)]
     //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
-    public int numRooms = 1;
+    public int numberOfRooms;
 
     //room width sliders
-    [Range(1, 100)]
-    public int minimumWidth;
-    [Range(1, 100)]
-    public int maximumWidth;
+    [Range(3, 100)]
+    public int minRoomWidth;
+    [Range(3, 100)]
+    public int maxRoomWidth;
 
     //room height sliders
-    [Range(1, 100)]
-    public int minimumHeight;
-    [Range(1, 100)]
-    public int maximumHeight;
+    [Range(3, 100)]
+    public int minRoomHeight;
+    [Range(3, 100)]
+    public int maxRoomHeight;
     //----------------------------------
 
     //IN-EDITOR SLIDER VALIDATION
@@ -41,14 +41,14 @@ public class Configure : MonoBehaviour
     void OnValidate()
     {
 
-        if (minimumWidth > maximumWidth && maximumWidth != roomWidthRange[1])
+        if (minRoomWidth > maxRoomWidth && maxRoomWidth != roomWidthRange[1])
         {
-            minimumWidth++;
+            maxRoomWidth = minRoomWidth;
         }
 
-        if (minimumHeight > maximumHeight && maximumHeight != roomHeightRange[1])
+        if (minRoomHeight > maxRoomHeight && maxRoomHeight != roomHeightRange[1])
         {
-            maximumHeight++;
+            maxRoomHeight = minRoomHeight;
         }
     }
     //----------------------------------

@@ -172,11 +172,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fec9d626be6314459365827457999be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numRooms: 1
-  minimumWidth: 1
-  maximumWidth: 1
-  minimumHeight: 1
-  maximumHeight: 1
+  numberOfRooms: 0
+  minRoomWidth: 3
+  maxRoomWidth: 3
+  minRoomHeight: 0
+  maxRoomHeight: 0
 --- !u!1001 &4611972535502698094
 PrefabInstance:
   m_ObjectHideFlags: 0
