@@ -15,4 +15,11 @@ public class GenerateRoom : MonoBehaviour
     {
         
     }
+
+
+    bool CreateRoom(float unit, int width, int height)
+    {
+
+        return false;
+    }
 }

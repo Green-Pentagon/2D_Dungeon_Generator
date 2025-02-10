@@ -17,6 +17,11 @@ public class Configure : MonoBehaviour
 
     //IN-EDITOR SLIDERS
     //----------------------------------
+
+    [Header("Room Settings", order = 0)]
+    [Space(2, order = 1)]
+
+
     //room count sliders
     [Range(1, 6)]
     //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
@@ -33,6 +38,14 @@ public class Configure : MonoBehaviour
     public int minRoomHeight;
     [Range(3, 100)]
     public int maxRoomHeight;
+
+    
+    [Min(1)]
+    public int seed;
+    public bool randomiseSeedOnStart = true;
+    
+    
+    
     //----------------------------------
 
     //IN-EDITOR SLIDER VALIDATION
@@ -40,7 +53,6 @@ public class Configure : MonoBehaviour
     [ExecuteInEditMode]
     void OnValidate()
     {
-
         if (minRoomWidth > maxRoomWidth && maxRoomWidth != roomWidthRange[1])
         {
             maxRoomWidth = minRoomWidth;
@@ -54,8 +66,16 @@ public class Configure : MonoBehaviour
     //----------------------------------
 
     private List<Object> rooms;
+
     void Start()
     {
+        if (randomiseSeedOnStart)
+        {
+            seed = (int)System.DateTime.Now.Ticks;
+        }
+        Random.InitState(seed);
+        print("Called in Start " + seed);
+
         rooms = new List<Object>();
     }
 
