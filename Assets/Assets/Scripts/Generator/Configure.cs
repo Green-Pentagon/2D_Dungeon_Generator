@@ -6,7 +6,9 @@ public class Configure : MonoBehaviour
 {
     //Class attributes
     //----------------------------------
-    public const float UNIT_SIZE = 1.0f;
+    private GenerateRoom RoomGenScript;
+    public float UNIT_SIZE = 1.0f;
+    public Sprite DebugFloorTile;
 
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
     private int[] roomWidthRange = { 3, 100 };
@@ -66,6 +68,8 @@ public class Configure : MonoBehaviour
     //----------------------------------
     void Start()
     {
+        RoomGenScript = GetComponentInParent<GenerateRoom>();
+
         if (randomiseSeedOnStart)
         {
             seed = (int)System.DateTime.Now.Ticks;
@@ -74,6 +78,10 @@ public class Configure : MonoBehaviour
         print("Generated Seed: " + seed + "\nRandom number from 1 to 100: " + Random.Range(1,100));
 
         rooms = new List<Object>();
+
+
+        rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile, UNIT_SIZE, maxRoomWidth, maxRoomHeight));
+
     }
 
     // Update is called once per frame

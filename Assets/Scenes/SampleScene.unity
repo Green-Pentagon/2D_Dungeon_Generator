@@ -138,8 +138,9 @@ GameObject:
   m_Component:
   - component: {fileID: 486926895}
   - component: {fileID: 486926896}
+  - component: {fileID: 486926897}
   m_Layer: 0
-  m_Name: Scripts
+  m_Name: RoomGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,13 +173,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fec9d626be6314459365827457999be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UNIT_SIZE: 1
+  DebugFloorTile: {fileID: 21300000, guid: 5e7905d190d4df7489cb58aaa6355f60, type: 3}
   seed: 1
   randomiseSeedOnStart: 0
   numberOfRooms: 1
   minRoomWidth: 3
   maxRoomWidth: 3
-  minRoomHeight: 0
-  maxRoomHeight: 0
+  minRoomHeight: 3
+  maxRoomHeight: 3
+--- !u!114 &486926897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486926894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f018597cb1c704db701337ce88556e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4611972535502698094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,11 +208,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2572781756047071266, guid: 98c3cfdf87b6fd84fb984329460c1d8a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2572781756047071266, guid: 98c3cfdf87b6fd84fb984329460c1d8a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2572781756047071266, guid: 98c3cfdf87b6fd84fb984329460c1d8a, type: 3}
       propertyPath: m_LocalPosition.z
