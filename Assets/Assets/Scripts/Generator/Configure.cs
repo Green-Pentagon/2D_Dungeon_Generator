@@ -1,3 +1,14 @@
+//TO DO:
+//- Add wall tiles to rooms & ensure they are given a 2d box collider
+//- Add functionality that will spread the rooms out 1 unit tile apart & snap them to a unit determined grid
+//- Add the ability to select how you want to spread the rooms out & the size of the spread
+//- Corridor functionality
+//- wall-tile to corridor on corridor touch functionality
+//- clean up dead ends (configurable?)
+//- surround corridor tiles with walls functionality
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +42,7 @@ public class Configure : MonoBehaviour
     [Space(2, order = 3)]
 
     //room count sliders
-    [Range(1, 6)]
+    [Range(1, 10)]
     //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
     public int numberOfRooms;
 
@@ -79,9 +90,11 @@ public class Configure : MonoBehaviour
 
         rooms = new List<Object>();
 
-
-        rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile, UNIT_SIZE, maxRoomWidth, maxRoomHeight));
-
+        for (int i = 1; i <= numberOfRooms; i++)
+        {
+            //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
+            rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile, UNIT_SIZE, Random.Range(minRoomWidth, maxRoomWidth + 1), Random.Range(minRoomHeight, maxRoomHeight + 1)));
+        }
     }
 
     // Update is called once per frame
