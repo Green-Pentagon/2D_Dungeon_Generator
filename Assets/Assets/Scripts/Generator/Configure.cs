@@ -1,6 +1,7 @@
 //TO DO:
 //- Add wall tiles to rooms & ensure they are given a 2d box collider
 //- Add functionality that will spread the rooms out 1 unit tile apart & snap them to a unit determined grid
+//- RE-ENABLE ALL WALL TILE BOX COLLIDERS AFTER ROOMS ARE SEPERATED
 //- Add the ability to select how you want to spread the rooms out & the size of the spread
 //- Corridor functionality
 //- wall-tile to corridor on corridor touch functionality
@@ -20,6 +21,7 @@ public class Configure : MonoBehaviour
     private GenerateRoom RoomGenScript;
     public float UNIT_SIZE = 1.0f;
     public Sprite DebugFloorTile;
+    public Sprite DebugWallTile;
 
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
     private int[] roomWidthRange = { 3, 100 };
@@ -38,7 +40,7 @@ public class Configure : MonoBehaviour
     public bool randomiseSeedOnStart = true;
 
 
-    [Header("Room Settings", order = 2)]
+    [Header("Room Settings: General", order = 2)]
     [Space(2, order = 3)]
 
     //room count sliders
@@ -57,6 +59,15 @@ public class Configure : MonoBehaviour
     public int minRoomHeight;
     [Range(3, 100)]
     public int maxRoomHeight;
+
+
+    [Header("Room Settings: Spread", order = 4)]
+    [Space(2, order = 5)]
+    //room spread settings
+    [Range(0, 50)]
+    public int spawnSpreadX;
+    [Range(0, 50)]
+    public int spawnSpreadY;
 
     //----------------------------------
     //IN-EDITOR SLIDER VALIDATION
@@ -89,11 +100,18 @@ public class Configure : MonoBehaviour
         print("Generated Seed: " + seed + "\nRandom number from 1 to 100: " + Random.Range(1,100));
 
         rooms = new List<Object>();
+        int rndWidth;
+        int rndHeight;
+        Vector2 rndOffset;
 
         for (int i = 1; i <= numberOfRooms; i++)
         {
             //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
-            rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile, UNIT_SIZE, Random.Range(minRoomWidth, maxRoomWidth + 1), Random.Range(minRoomHeight, maxRoomHeight + 1)));
+            rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
+            rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
+            rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
+
+            rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile,DebugWallTile, UNIT_SIZE, rndWidth,rndHeight,rndOffset));
         }
     }
 
