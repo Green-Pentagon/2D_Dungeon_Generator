@@ -21,12 +21,11 @@ public class GenerateRoom : MonoBehaviour
     }
 
 
-    public Object CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
+    public GameObject CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
     {
         GameObject room = new GameObject();
         room.name = "Room";
         Vector2 tileBounds = FloorTile.bounds.size;
-
 
 
         //creating template floor tile
@@ -37,7 +36,7 @@ public class GenerateRoom : MonoBehaviour
         floorTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
 
 
-        //creating template floor tile
+        //creating template wall tile
         GameObject wallTile = new GameObject();
         wallTile.name = "WallTile";
         wallTile.AddComponent<SpriteRenderer>();

@@ -28,7 +28,7 @@ public class Configure : MonoBehaviour
     private int[] roomHeightRange = { 3, 100 };
     //private int[] roomCountRange = { 1, 6 };
 
-    private List<Object> rooms;
+    private List<GameObject> rooms;
     //----------------------------------
     //IN-EDITOR SLIDERS
     //----------------------------------
@@ -88,6 +88,26 @@ public class Configure : MonoBehaviour
     //----------------------------------
     //Class Methods
     //----------------------------------
+    
+    
+    void EnableWallTileColliders(List<GameObject> roomList)
+    {
+        //goes through every tile in every room & enables all box colliders
+        foreach (GameObject room in roomList)
+        {
+            for (int i = 0; i < room.transform.childCount; i++)
+            {
+                if (room.transform.GetChild(i).TryGetComponent<BoxCollider2D>(out BoxCollider2D coll))
+                {
+                    //if a tile has a box collider, enable it
+                    coll.enabled = true;
+                }
+            }
+        }
+    }
+    
+    
+    
     void Start()
     {
         RoomGenScript = GetComponentInParent<GenerateRoom>();
@@ -99,7 +119,7 @@ public class Configure : MonoBehaviour
         Random.InitState(seed);
         print("Generated Seed: " + seed + "\nRandom number from 1 to 100: " + Random.Range(1,100));
 
-        rooms = new List<Object>();
+        rooms = new List<GameObject>();
         int rndWidth;
         int rndHeight;
         Vector2 rndOffset;
@@ -113,6 +133,12 @@ public class Configure : MonoBehaviour
 
             rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile,DebugWallTile, UNIT_SIZE, rndWidth,rndHeight,rndOffset));
         }
+
+        //enable only once:
+        //  - rooms are spread out with 1 unit tile of space between.
+        //  - rooms are snapped to unit grid.
+        //  - (consider once pathing implemented) when all wall tiles were converted into floor tiles.
+        //EnableWallTileColliders(rooms);
     }
 
     // Update is called once per frame
