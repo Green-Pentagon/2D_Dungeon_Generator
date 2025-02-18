@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2779663058150156086}
   - component: {fileID: 1221978649862484319}
   - component: {fileID: 1315228429545774380}
+  - component: {fileID: 8887261893624996263}
   m_Layer: 0
   m_Name: RoomGenerator
   m_TagString: Untagged
@@ -55,6 +56,8 @@ MonoBehaviour:
   maxRoomWidth: 7
   minRoomHeight: 3
   maxRoomHeight: 12
+  spawnSpreadX: 0
+  spawnSpreadY: 0
 --- !u!114 &1315228429545774380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,5 +68,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06f018597cb1c704db701337ce88556e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8887261893624996263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5366122594793602101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15977dac526e6f4498a7b33b0640c7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

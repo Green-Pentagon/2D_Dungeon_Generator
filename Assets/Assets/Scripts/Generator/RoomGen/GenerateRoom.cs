@@ -1,3 +1,6 @@
+//IMPORTANT: Please do not change the name of the Rooms inside of this script, as it is checked inside of SnapToGrid.cs script within the Run(int unit) method
+//this is only needed one time to alter te box colliders for the rooms used to seperate them.
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -80,11 +83,17 @@ public class GenerateRoom : MonoBehaviour
         room.GetComponent<Transform>().position = offset * unit;
 
         //Seperation Logic Collider & rigidbody, to be disabled and or removed later down the creation process
+        //this collider is x units wider and taller than the room, as to ensure that the rooms will never touch.
         room.AddComponent<BoxCollider2D>();
         room.GetComponent<BoxCollider2D>().offset = new Vector2((width * unit) / 2.0f - unit/2.0f, (height * unit) / 2.0f - unit / 2.0f);
-        room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit, height * unit);
+        
+        //collider that matches the extents of the room, if it'll make tetection of patch touching easier, it could be reverted to this.
+        //room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit, height * unit);
+        //collider needed in order to ensure that rooms are seperated.
+        room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit + (2f*unit), height * unit + (2f * unit));
         room.AddComponent<Rigidbody2D>();
         room.GetComponent<Rigidbody2D>().gravityScale = 0.0f;
+        room.GetComponent<Rigidbody2D>().mass = 10.0f * (width+height);
         room.GetComponent<Rigidbody2D>().freezeRotation = true;
         room.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 

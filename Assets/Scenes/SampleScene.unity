@@ -137,31 +137,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomWidth
-      value: 25
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomWidth
-      value: 10
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadX
-      value: 21
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadY
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomHeight
-      value: 21
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomHeight
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfRooms
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: randomiseSeedOnStart
