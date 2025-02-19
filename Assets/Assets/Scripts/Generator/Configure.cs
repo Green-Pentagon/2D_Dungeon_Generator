@@ -66,9 +66,9 @@ public class Configure : MonoBehaviour
     [Header("Room Settings: Spread", order = 4)]
     [Space(2, order = 5)]
     //room spread settings
-    [Range(0, 50)]
+    [Range(0, 200)]
     public int spawnSpreadX;
-    [Range(0, 50)]
+    [Range(0, 200)]
     public int spawnSpreadY;
 
     //----------------------------------
@@ -116,7 +116,7 @@ public class Configure : MonoBehaviour
     bool AreRoomsClipping()
     {
         bool output = false;
-        ContactFilter2D fltr = new ContactFilter2D();
+        //ContactFilter2D fltr = new ContactFilter2D();
         //List<Collider2D> result = new List<Collider2D>();
         //int numColliders = 0;
         foreach(GameObject room in rooms)

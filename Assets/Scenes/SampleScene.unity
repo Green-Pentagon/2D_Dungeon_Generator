@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -137,27 +136,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomWidth
-      value: 100
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomWidth
-      value: 19
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadX
-      value: 0
+      value: 47
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadY
-      value: 0
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomHeight
-      value: 100
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomHeight
-      value: 15
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfRooms
@@ -165,7 +164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: randomiseSeedOnStart
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2779663058150156086, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: m_RootOrder
@@ -297,3 +296,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df1c78b315faa13469352e57ce575665, type: 3}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 9182088524472080843}
+  - {fileID: 1496162655562367033}
