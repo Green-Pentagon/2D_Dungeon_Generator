@@ -26,8 +26,6 @@ public class Configure : MonoBehaviour
     private SnapToGrid SnapToGrid;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
-    private bool snapReady = false;
-    float waitBeforeSnapping;
     //private int[] roomCountRange = { 1, 6 };
 
     private List<GameObject> rooms;
@@ -46,9 +44,9 @@ public class Configure : MonoBehaviour
     [Space(2, order = 3)]
 
     //room count sliders
-    [Range(1, 10)]
+    [Range(10, 100)]
     //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
-    public int numberOfRooms;
+    public int numberOfAttempts;
 
     //room width sliders
     [Range(3, 100)]
@@ -99,7 +97,7 @@ public class Configure : MonoBehaviour
         {
             //destroys the box-collider used for seperation.
             Destroy(room.GetComponent<BoxCollider2D>());
-            Destroy(room.GetComponent<Rigidbody2D>());
+            //Destroy(room.GetComponent<Rigidbody2D>());
 
             //re-enables wall tile collisions.
             for (int i = 0; i < room.transform.childCount; i++)
@@ -113,53 +111,20 @@ public class Configure : MonoBehaviour
         }
     }
 
-    bool AreRoomsClipping()
+    bool IsClipping(ref GameObject givenRoom)
     {
-        bool output = false;
-        //ContactFilter2D fltr = new ContactFilter2D();
-        //List<Collider2D> result = new List<Collider2D>();
-        //int numColliders = 0;
-        foreach(GameObject room in rooms)
-        {
-            //numColliders = Physics2D.OverlapCollider(room.GetComponent<BoxCollider2D>(), fltr, result);
-            //foreach(Collider2D coll in result)
-            //{
-            //    if (Mathf.Abs(Physics2D.Distance(room.GetComponent<BoxCollider2D>(),coll).distance) < room.GetComponent<Transform>().lossyScale.x ||
-            //        Mathf.Abs(Physics2D.Distance(room.GetComponent<BoxCollider2D>(), coll).distance) < room.GetComponent<Transform>().lossyScale.y)
-            //    {
-            //        output = true;
-            //        print("Clipping detected: " + numColliders + " colliders intersecting with a room collider.");
-            //        return output;
-            //    }
-            //}
+        ContactFilter2D fltr = new ContactFilter2D();
+        List<Collider2D> result = new List<Collider2D>();
+        
+        int numColliders = Physics2D.OverlapCollider(givenRoom.GetComponent<BoxCollider2D>(), fltr, result);
 
-        }
-        return output;
-    }
-
-    IEnumerator WaitForPhysicsSeperation()
-    {
-        bool roomsInvalid = true;
-
-        while (roomsInvalid)
-        {
-            yield return new WaitForSeconds(waitBeforeSnapping);
-            roomsInvalid = AreRoomsClipping();
-            if (roomsInvalid)
-            {
-                print("room collision detected, waiting additional " + waitBeforeSnapping + " seconds...");
-            }
-            
-        }
-        snapReady = true;
-
-
+        return numColliders != 0;
     }
 
 
     void Start()
     {
-        waitBeforeSnapping = numberOfRooms / 2.0f + (maxRoomHeight + maxRoomWidth) / 20.0f;
+        //waitBeforeSnapping = numberOfAttempts / 2.0f + (maxRoomHeight + maxRoomWidth) / 20.0f;
         //waitBeforeSnapping = 10.0f;
 
         RoomGenScript = GetComponentInParent<GenerateRoom>();
@@ -176,19 +141,31 @@ public class Configure : MonoBehaviour
         int rndWidth;
         int rndHeight;
         Vector2 rndOffset;
+        GameObject tempRoom;
 
-        print("Generating " + numberOfRooms + " rooms...");
-        for (int i = 1; i <= numberOfRooms; i++)
+        print("Running " + numberOfAttempts + " attempts...");
+        for (int i = 1; i <= numberOfAttempts; i++)
         {
             //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
             rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
             rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
             rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
-
-            rooms.Add(RoomGenScript.CreateRoom(DebugFloorTile,DebugWallTile, UNIT_SIZE, rndWidth,rndHeight,rndOffset));
+            tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
+            if (!IsClipping(ref tempRoom))
+            {
+                rooms.Add(tempRoom);
+            }
+            else
+            {
+                Destroy(tempRoom);
+            }
         }
-        print("Rooms generated, waiting " + waitBeforeSnapping + " seconds for physics to resolve...");
-        StartCoroutine(WaitForPhysicsSeperation());
+
+        SnapToGrid.Run(rooms, UNIT_SIZE);
+        EnableWallTileColliders(rooms);
+
+        //print("Rooms generated, waiting " + waitBeforeSnapping + " seconds for physics to resolve...");
+        //StartCoroutine(WaitForPhysicsSeperation());
         //LOGIC MOVES ON INTO THE UPDATE FUNCTION
 
 
@@ -197,15 +174,15 @@ public class Configure : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (snapReady)
-        {
-            snapReady = false;
-            print("Timer up, enabling wall tile colliders and snapping...");
-            EnableWallTileColliders(rooms);
-            SnapToGrid.Run(rooms, UNIT_SIZE);
-            print("Preperation Complete, rooms are ready for corridors...");
+        //if (snapReady)
+        //{
+        //    snapReady = false;
+        //    print("Timer up, enabling wall tile colliders and snapping...");
+        //    EnableWallTileColliders(rooms);
+        //    SnapToGrid.Run(rooms, UNIT_SIZE);
+        //    print("Preperation Complete, rooms are ready for corridors...");
 
-        }
+        //}
 
         //enable only once:
         //  - rooms are spread out with 1 unit tile of space between.
