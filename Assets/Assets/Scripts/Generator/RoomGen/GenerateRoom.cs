@@ -91,11 +91,12 @@ public class GenerateRoom : MonoBehaviour
         //room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit, height * unit);
         //collider needed in order to ensure that rooms are seperated.
         room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit + (2f*unit), height * unit + (2f * unit));
-        room.AddComponent<Rigidbody2D>();
-        room.GetComponent<Rigidbody2D>().gravityScale = 0.0f;
-        room.GetComponent<Rigidbody2D>().mass = 10.0f * (width+height);
-        room.GetComponent<Rigidbody2D>().freezeRotation = true;
-        room.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+        
+        //room.AddComponent<Rigidbody2D>();
+        //room.GetComponent<Rigidbody2D>().gravityScale = 0.0f;
+        //room.GetComponent<Rigidbody2D>().mass = 10.0f * (width+height);
+        //room.GetComponent<Rigidbody2D>().freezeRotation = true;
+        //room.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 
 
         return room;

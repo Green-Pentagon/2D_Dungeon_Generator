@@ -144,11 +144,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadX
-      value: 47
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadY
-      value: 12
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomHeight
@@ -161,6 +161,10 @@ PrefabInstance:
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfRooms
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: numberOfAttempts
+      value: 173
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: randomiseSeedOnStart
