@@ -131,16 +131,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: seed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: UNIT_SIZE
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomWidth
-      value: 34
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomWidth
-      value: 11
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadX
@@ -152,15 +156,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomHeight
-      value: 34
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: minRoomHeight
-      value: 11
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfRooms
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfAttempts

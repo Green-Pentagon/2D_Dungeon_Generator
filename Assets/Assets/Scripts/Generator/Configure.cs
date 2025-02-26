@@ -26,6 +26,7 @@ public class Configure : MonoBehaviour
     private SnapToGrid SnapToGrid;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
+    private int attemptsAllowed = 300;
     //private int[] roomCountRange = { 1, 6 };
 
     private List<GameObject> rooms;
@@ -44,9 +45,9 @@ public class Configure : MonoBehaviour
     [Space(2, order = 3)]
 
     //room count sliders
-    [Range(10, 100)]
+    [Range(2,30)]
     //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
-    public int numberOfAttempts;
+    public int numberOfRooms;
 
     //room width sliders
     [Range(3, 100)]
@@ -142,10 +143,12 @@ public class Configure : MonoBehaviour
         int rndHeight;
         Vector2 rndOffset;
         GameObject tempRoom;
+        int cAttempt = 0;
 
-        print("Running " + numberOfAttempts + " attempts...");
-        for (int i = 1; i <= numberOfAttempts; i++)
+        print("Attempting to generate "+ numberOfRooms + " number of rooms...");
+        while (cAttempt < attemptsAllowed && rooms.Count < numberOfRooms)
         {
+            cAttempt++;
             //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
             rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
             rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
@@ -160,6 +163,26 @@ public class Configure : MonoBehaviour
                 Destroy(tempRoom);
             }
         }
+
+        print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
+
+        ////print("Running " + numberOfAttempts + " attempts...");
+        //for (int i = 1; i <= numberOfRooms; i++)
+        //{
+        //    //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
+        //    rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
+        //    rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
+        //    rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
+        //    tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
+        //    if (!IsClipping(ref tempRoom))
+        //    {
+        //        rooms.Add(tempRoom);
+        //    }
+        //    else
+        //    {
+        //        Destroy(tempRoom);
+        //    }
+        //}
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
