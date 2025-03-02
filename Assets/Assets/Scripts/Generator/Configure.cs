@@ -1,7 +1,5 @@
 //TO DO:
 //- double check that the grid snapper is snapping to the correct unit size.
-//- (uncomment the code & debug it so it works properly, needs re-writing to simplify it) ADD A CHECK TO ENSURE THAT ROOMS ARE NOT CLIPPING IN EACH OTHER AFTER THE COOLDOWN
-//- Add the ability to select how you want to spread the rooms out & the size of the spread
 //- Corridor functionality
 //- wall-tile to corridor on corridor touch functionality
 //- clean up dead ends (configurable?)
@@ -50,8 +48,7 @@ public class Configure : MonoBehaviour
     [Space(2, order = 3)]
 
     //room count sliders
-    [Range(2,30)]
-    //[Min(1), Tooltip("WARNING: High room counts may impact performance!")]
+    [Range(2,30), Tooltip("WARNING: High room counts may impact performance!")]
     public int numberOfRooms;
 
     //room width sliders
@@ -136,18 +133,6 @@ public class Configure : MonoBehaviour
         //(x,-y)
         ConfinesCornerBottomRight = new Vector2(((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)) ,
                                                 -((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
-        //DEBUG FOR VISUALISING CONFINES
-        //GameObject debugTile = new GameObject();
-        //debugTile.name = "DebugTile";
-        //debugTile.AddComponent<SpriteRenderer>();
-        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
-        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        //debugTile.transform.position = ConfinesCornerTopLeft;
-
-        //GameObject debugTile2 = Instantiate(debugTile);
-        //debugTile2.transform.position = ConfinesCornerBottomRight;
-
-
 
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
@@ -188,18 +173,26 @@ public class Configure : MonoBehaviour
 
         print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
 
-
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
 
 
+        //DEBUG FOR VISUALISING CONFINES
+        //GameObject debugTile = new GameObject();
+        //debugTile.name = "DebugTile";
+        //debugTile.AddComponent<SpriteRenderer>();
+        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
+        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //debugTile.transform.position = ConfinesCornerTopLeft;
 
+        //GameObject debugTile2 = Instantiate(debugTile);
+        //debugTile2.transform.position = ConfinesCornerBottomRight;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     //----------------------------------
 }
