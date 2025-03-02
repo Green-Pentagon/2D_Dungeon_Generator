@@ -9,6 +9,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Configure : MonoBehaviour
@@ -32,7 +33,7 @@ public class Configure : MonoBehaviour
     private Vector2 ConfinesCornerBottomRight = Vector2.zero;
 
 
-    private List<GameObject> rooms;
+    private List<Room> rooms;
     //----------------------------------
     //IN-EDITOR SLIDERS
     //----------------------------------
@@ -93,19 +94,19 @@ public class Configure : MonoBehaviour
     //----------------------------------
     
     
-    void EnableWallTileColliders(List<GameObject> roomList)
+    void EnableWallTileColliders(List<Room> roomList)
     {
         //goes through every tile in every room & enables all box colliders
-        foreach (GameObject room in roomList)
+        foreach (Room room in roomList)
         {
             //destroys the box-collider used for seperation.
-            Destroy(room.GetComponent<BoxCollider2D>());
+            Destroy(room.GetRoom().GetComponent<BoxCollider2D>());
             //Destroy(room.GetComponent<Rigidbody2D>());
 
             //re-enables wall tile collisions.
-            for (int i = 0; i < room.transform.childCount; i++)
+            for (int i = 0; i < room.GetRoom().transform.childCount; i++)
             {
-                if (room.transform.GetChild(i).TryGetComponent<BoxCollider2D>(out BoxCollider2D coll))
+                if (room.GetRoom().transform.GetChild(i).TryGetComponent<BoxCollider2D>(out BoxCollider2D coll))
                 {
                     //if a tile has a box collider, enable it
                     coll.enabled = true;
@@ -156,11 +157,11 @@ public class Configure : MonoBehaviour
         print("--DUNGEON GENERATOR SCRIPT START--\nSeed: " + seed);
         print("confined to area: (" + ConfinesCornerTopLeft.x + ", " + ConfinesCornerTopLeft.y + ") to (" + ConfinesCornerBottomRight.x + ", " + ConfinesCornerBottomRight.y + ").");
 
-        rooms = new List<GameObject>();
+        rooms = new List<Room>();
         int rndWidth;
         int rndHeight;
         Vector2 rndOffset;
-        GameObject tempRoom;
+        Room tempRoom;
         int cAttempt = 0;
 
         print("Attempting to generate "+ numberOfRooms + " number of rooms...");
@@ -173,14 +174,21 @@ public class Configure : MonoBehaviour
             rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
             tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
 
-            if (!IsClipping(ref tempRoom))
+            if (!IsClipping(ref tempRoom.GetRoom()))
             {
+                tempRoom.SetId(rooms.Count);
                 rooms.Add(tempRoom);
             }
             else
             {
-                Destroy(tempRoom);
+                Destroy(tempRoom.GetRoom());
+                tempRoom = null;
             }
+        }
+
+        if (rooms.Count < numberOfRooms)
+        {
+            Debug.LogWarning("Generator fell short of target room count (" + numberOfRooms + " desired, " + rooms.Count + " created)");
         }
 
         print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");

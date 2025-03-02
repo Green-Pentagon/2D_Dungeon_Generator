@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class SnapToGrid : MonoBehaviour
 {
-    public void Run(GameObject item,float unit)
+    public void Run(Room item,float unit)
     {
 
         try
         {
-            item.GetComponent<Rigidbody2D>().simulated = false;
+            item.GetRoom().GetComponent<Rigidbody2D>().simulated = false;
         }
         catch
         {
@@ -18,16 +18,16 @@ public class SnapToGrid : MonoBehaviour
         }
         
 
-        Transform Tr = item.GetComponent<Transform>();
+        Transform Tr = item.GetRoom().GetComponent<Transform>();
         Tr.position = new Vector3((((int)Tr.position.x / unit) * unit),
                                         (((int)Tr.position.y / unit) * unit), Tr.position.z);
-        item.GetComponent<Transform>().position = Tr.position;
+        item.GetRoom().GetComponent<Transform>().position = Tr.position;
         
         try
         {
-            if (item.transform.name != "Room")
+            if (item.GetRoom().transform.name != "Room")
             {
-                item.GetComponent<Rigidbody2D>().simulated = true;
+                item.GetRoom().GetComponent<Rigidbody2D>().simulated = true;
             }
                 
         }
@@ -38,9 +38,9 @@ public class SnapToGrid : MonoBehaviour
 
     }
 
-    public void Run(List<GameObject> items, float unit)
+    public void Run(List<Room> items, float unit)
     {
-        foreach (GameObject item in items)
+        foreach (Room item in items)
         {
             Run(item, unit);
         }

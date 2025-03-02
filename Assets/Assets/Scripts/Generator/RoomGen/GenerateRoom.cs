@@ -7,6 +7,36 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public class Room
+{
+    private GameObject roomObj;
+    private int roomId;
+
+    public Room(GameObject room)
+    {
+        roomObj = room;
+    }
+
+    //~Room()
+    //{
+        
+    //}
+
+    public Room(GameObject room, int id)
+    {
+        roomId = id;
+        roomObj = room;
+    }
+
+    public void SetId(int newId)
+    {
+        roomId = newId;
+    }
+    public int GetRoomId() { return roomId; }
+    public ref GameObject GetRoom() { return ref roomObj; }
+}
+
+
 public class GenerateRoom : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -24,7 +54,7 @@ public class GenerateRoom : MonoBehaviour
     }
 
 
-    public GameObject CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
+    public Room CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
     {
         GameObject room = new GameObject();
         room.name = "Room";
@@ -99,6 +129,6 @@ public class GenerateRoom : MonoBehaviour
         //room.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 
 
-        return room;
+        return new Room(room);
     }
 }
