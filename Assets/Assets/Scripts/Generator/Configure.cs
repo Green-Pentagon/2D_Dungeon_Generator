@@ -93,6 +93,73 @@ public class Configure : MonoBehaviour
     //Class Methods
     //----------------------------------
     
+    void SetConfines()
+    {
+        //(-x,y)
+        ConfinesCornerTopLeft = new Vector2(-((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)),
+                                            ((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
+        //(x,-y)
+        ConfinesCornerBottomRight = new Vector2(((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)),
+                                                -((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
+
+        //DEBUG FOR VISUALISING CONFINES
+        //GameObject debugTile = new GameObject();
+        //debugTile.name = "DebugTile";
+        //debugTile.AddComponent<SpriteRenderer>();
+        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
+        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //debugTile.transform.position = ConfinesCornerTopLeft;
+
+        //GameObject debugTile2 = Instantiate(debugTile);
+        //debugTile2.transform.position = ConfinesCornerBottomRight;
+    }
+
+    void SetSeed()
+    {
+        if (randomiseSeedOnStart)
+        {
+            seed = (int)System.DateTime.Now.Ticks;
+        }
+        Random.InitState(seed);
+    }
+    void GenerateRooms()
+    {
+        rooms = new List<Room>();
+        int rndWidth;
+        int rndHeight;
+        Vector2 rndOffset;
+        Room tempRoom;
+        int cAttempt = 0;
+
+        print("Attempting to generate " + numberOfRooms + " number of rooms...");
+        while (cAttempt < ATTEMPTS_ALLOWED && rooms.Count < numberOfRooms)
+        {
+            cAttempt++;
+
+            rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
+            rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
+            rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
+            tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
+
+            if (!IsClipping(ref tempRoom.GetRoom()))
+            {
+                tempRoom.SetId(rooms.Count);
+                rooms.Add(tempRoom);
+            }
+            else
+            {
+                Destroy(tempRoom.GetRoom());
+                tempRoom = null;
+            }
+        }
+
+        if (rooms.Count < numberOfRooms)
+        {
+            Debug.LogWarning("Generator fell short of target room count (" + numberOfRooms + " desired, " + rooms.Count + " created)");
+        }
+
+        print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
+    }
     
     void EnableWallTileColliders(List<Room> roomList)
     {
@@ -128,76 +195,19 @@ public class Configure : MonoBehaviour
 
     void Start()
     {
-        //(-x,y)
-        ConfinesCornerTopLeft = new Vector2(-((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX* UNIT_SIZE)) ,
-                                            ((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
-        //(x,-y)
-        ConfinesCornerBottomRight = new Vector2(((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)) ,
-                                                -((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
-
-        //DEBUG FOR VISUALISING CONFINES
-        //GameObject debugTile = new GameObject();
-        //debugTile.name = "DebugTile";
-        //debugTile.AddComponent<SpriteRenderer>();
-        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
-        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        //debugTile.transform.position = ConfinesCornerTopLeft;
-
-        //GameObject debugTile2 = Instantiate(debugTile);
-        //debugTile2.transform.position = ConfinesCornerBottomRight;
-
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
 
-        if (randomiseSeedOnStart)
-        {
-            seed = (int)System.DateTime.Now.Ticks;
-        }
-        Random.InitState(seed);
+        SetConfines();
+        SetSeed();
+
         print("--DUNGEON GENERATOR SCRIPT START--\nSeed: " + seed);
         print("confined to area: (" + ConfinesCornerTopLeft.x + ", " + ConfinesCornerTopLeft.y + ") to (" + ConfinesCornerBottomRight.x + ", " + ConfinesCornerBottomRight.y + ").");
 
-        rooms = new List<Room>();
-        int rndWidth;
-        int rndHeight;
-        Vector2 rndOffset;
-        Room tempRoom;
-        int cAttempt = 0;
-
-        print("Attempting to generate "+ numberOfRooms + " number of rooms...");
-        while (cAttempt < ATTEMPTS_ALLOWED && rooms.Count < numberOfRooms)
-        {
-            cAttempt++;
-
-            rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
-            rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
-            rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
-            tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
-
-            if (!IsClipping(ref tempRoom.GetRoom()))
-            {
-                tempRoom.SetId(rooms.Count);
-                rooms.Add(tempRoom);
-            }
-            else
-            {
-                Destroy(tempRoom.GetRoom());
-                tempRoom = null;
-            }
-        }
-
-        if (rooms.Count < numberOfRooms)
-        {
-            Debug.LogWarning("Generator fell short of target room count (" + numberOfRooms + " desired, " + rooms.Count + " created)");
-        }
-
-        print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
+        GenerateRooms();
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
-
-
-
     }
 
     // Update is called once per frame
