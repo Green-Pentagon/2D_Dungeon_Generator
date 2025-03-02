@@ -21,13 +21,18 @@ public class Configure : MonoBehaviour
     public Sprite DebugFloorTile;
     public Sprite DebugWallTile;
 
+    //determines the number of attempts that the algorithm will try to match the number of desired rooms for when placing.
+    [HideInInspector]
+    public int ATTEMPTS_ALLOWED = 300;
+
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
     private GenerateRoom RoomGenScript;
     private SnapToGrid SnapToGrid;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
-    private int attemptsAllowed = 300;
-    //private int[] roomCountRange = { 1, 6 };
+    private Vector2 ConfinesCornerTopLeft = Vector2.zero;
+    private Vector2 ConfinesCornerBottomRight = Vector2.zero;
+
 
     private List<GameObject> rooms;
     //----------------------------------
@@ -125,8 +130,24 @@ public class Configure : MonoBehaviour
 
     void Start()
     {
-        //waitBeforeSnapping = numberOfAttempts / 2.0f + (maxRoomHeight + maxRoomWidth) / 20.0f;
-        //waitBeforeSnapping = 10.0f;
+        //(-x,y)
+        ConfinesCornerTopLeft = new Vector2(-((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX* UNIT_SIZE)) ,
+                                            ((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
+        //(x,-y)
+        ConfinesCornerBottomRight = new Vector2(((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)) ,
+                                                -((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
+        //DEBUG FOR VISUALISING CONFINES
+        //GameObject debugTile = new GameObject();
+        //debugTile.name = "DebugTile";
+        //debugTile.AddComponent<SpriteRenderer>();
+        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
+        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //debugTile.transform.position = ConfinesCornerTopLeft;
+
+        //GameObject debugTile2 = Instantiate(debugTile);
+        //debugTile2.transform.position = ConfinesCornerBottomRight;
+
+
 
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
@@ -146,14 +167,15 @@ public class Configure : MonoBehaviour
         int cAttempt = 0;
 
         print("Attempting to generate "+ numberOfRooms + " number of rooms...");
-        while (cAttempt < attemptsAllowed && rooms.Count < numberOfRooms)
+        while (cAttempt < ATTEMPTS_ALLOWED && rooms.Count < numberOfRooms)
         {
             cAttempt++;
-            //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
+
             rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
             rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
             rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
             tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
+
             if (!IsClipping(ref tempRoom))
             {
                 rooms.Add(tempRoom);
@@ -166,30 +188,10 @@ public class Configure : MonoBehaviour
 
         print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
 
-        ////print("Running " + numberOfAttempts + " attempts...");
-        //for (int i = 1; i <= numberOfRooms; i++)
-        //{
-        //    //possible addition: add a randomised spread offset and allow user to select the size and shape of the offset?
-        //    rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
-        //    rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
-        //    rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
-        //    tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
-        //    if (!IsClipping(ref tempRoom))
-        //    {
-        //        rooms.Add(tempRoom);
-        //    }
-        //    else
-        //    {
-        //        Destroy(tempRoom);
-        //    }
-        //}
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
 
-        //print("Rooms generated, waiting " + waitBeforeSnapping + " seconds for physics to resolve...");
-        //StartCoroutine(WaitForPhysicsSeperation());
-        //LOGIC MOVES ON INTO THE UPDATE FUNCTION
 
 
     }
@@ -197,21 +199,7 @@ public class Configure : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (snapReady)
-        //{
-        //    snapReady = false;
-        //    print("Timer up, enabling wall tile colliders and snapping...");
-        //    EnableWallTileColliders(rooms);
-        //    SnapToGrid.Run(rooms, UNIT_SIZE);
-        //    print("Preperation Complete, rooms are ready for corridors...");
 
-        //}
-
-        //enable only once:
-        //  - rooms are spread out with 1 unit tile of space between.
-        //  - rooms are snapped to unit grid.
-        //  - (consider once pathing implemented) when all wall tiles were converted into floor tiles.
-        //EnableWallTileColliders(rooms);
     }
     //----------------------------------
 }
