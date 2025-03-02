@@ -1,6 +1,3 @@
-//IMPORTANT: Please do not change the name of the Rooms inside of this script, as it is checked inside of SnapToGrid.cs script within the Run(int unit) method
-//this is only needed one time to alter te box colliders for the rooms used to seperate them.
-
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -122,12 +119,6 @@ public class GenerateRoom : MonoBehaviour
         //collider needed in order to ensure that rooms are seperated.
         room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit + (2f*unit), height * unit + (2f * unit));
         
-        //room.AddComponent<Rigidbody2D>();
-        //room.GetComponent<Rigidbody2D>().gravityScale = 0.0f;
-        //room.GetComponent<Rigidbody2D>().mass = 10.0f * (width+height);
-        //room.GetComponent<Rigidbody2D>().freezeRotation = true;
-        //room.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-
 
         return new Room(room);
     }
