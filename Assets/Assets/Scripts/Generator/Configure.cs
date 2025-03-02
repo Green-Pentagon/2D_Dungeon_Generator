@@ -134,6 +134,17 @@ public class Configure : MonoBehaviour
         ConfinesCornerBottomRight = new Vector2(((maxRoomWidth * UNIT_SIZE) + (spawnSpreadX * UNIT_SIZE)) ,
                                                 -((maxRoomHeight * UNIT_SIZE) + (spawnSpreadY * UNIT_SIZE)));
 
+        //DEBUG FOR VISUALISING CONFINES
+        //GameObject debugTile = new GameObject();
+        //debugTile.name = "DebugTile";
+        //debugTile.AddComponent<SpriteRenderer>();
+        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
+        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //debugTile.transform.position = ConfinesCornerTopLeft;
+
+        //GameObject debugTile2 = Instantiate(debugTile);
+        //debugTile2.transform.position = ConfinesCornerBottomRight;
+
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
 
@@ -143,6 +154,7 @@ public class Configure : MonoBehaviour
         }
         Random.InitState(seed);
         print("--DUNGEON GENERATOR SCRIPT START--\nSeed: " + seed);
+        print("confined to area: (" + ConfinesCornerTopLeft.x + ", " + ConfinesCornerTopLeft.y + ") to (" + ConfinesCornerBottomRight.x + ", " + ConfinesCornerBottomRight.y + ").");
 
         rooms = new List<GameObject>();
         int rndWidth;
@@ -177,16 +189,7 @@ public class Configure : MonoBehaviour
         EnableWallTileColliders(rooms);
 
 
-        //DEBUG FOR VISUALISING CONFINES
-        //GameObject debugTile = new GameObject();
-        //debugTile.name = "DebugTile";
-        //debugTile.AddComponent<SpriteRenderer>();
-        //debugTile.GetComponent<SpriteRenderer>().sprite = DebugFloorTile;
-        //debugTile.GetComponent<Transform>().localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        //debugTile.transform.position = ConfinesCornerTopLeft;
 
-        //GameObject debugTile2 = Instantiate(debugTile);
-        //debugTile2.transform.position = ConfinesCornerBottomRight;
     }
 
     // Update is called once per frame
