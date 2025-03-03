@@ -27,6 +27,9 @@ public class GenerateMazeCorridors : MonoBehaviour
         //creating template floor tile
         tempCorridor = new GameObject();
         tempCorridor.name = "CorridorTile";
+        
+        //--------
+
         tempCorridor.AddComponent<SpriteRenderer>();
         tempCorridor.GetComponent<SpriteRenderer>().sprite = tile;
         tempCorridor.GetComponent<Transform>().localScale = new Vector3(1.0f * UNIT, 1.0f * UNIT, 1.0f);
@@ -34,32 +37,18 @@ public class GenerateMazeCorridors : MonoBehaviour
 
     bool IsInBounds(Vector2 vec)
     {
-        return !(vec.x > BoundsBottomRight.x && vec.x < BoundsTopLeft.x &&
-                vec.y > BoundsTopLeft.y && vec.y < BoundsBottomRight.y);
+        return !(vec.x > BoundsBottomRight.x || vec.x < BoundsTopLeft.x ||
+                vec.y > BoundsTopLeft.y || vec.y < BoundsBottomRight.y);
     }
 
-    bool PathValid(Vector3 Pos)
+
+
+    bool PathValid(Vector3 Pos,ref Dictionary<Vector3,int> logOfPositions)
     {
-        bool valid = false;
-
-        GameObject temp = new GameObject();
-        temp.transform.position = Pos;
-        temp.AddComponent<BoxCollider2D>();
-        temp.GetComponent<BoxCollider2D>().size = new Vector2(UNIT/2.0f, UNIT/2.0f);
-
-        ContactFilter2D fltr = new ContactFilter2D();
-        List<Collider2D> result = new List<Collider2D>();
-        int numColliders = Physics2D.OverlapCollider(temp.GetComponent<BoxCollider2D>(), fltr, result);
-
-
-        Destroy(temp);
-
-        valid = numColliders == 0;
-
-        return valid;
+        return !logOfPositions.ContainsKey(Pos);
     }
 
-    bool Step(ref Vector2 curPos,ref Vector2 curForward)
+    bool Step(ref Vector2 curPos,ref Vector2 curForward, ref Dictionary<Vector3,int> logOfPos)
     {
         int directionRoll = Random.Range(1,5);
         switch (directionRoll)
@@ -95,7 +84,7 @@ public class GenerateMazeCorridors : MonoBehaviour
         }
 
         //check if place to step is valid
-        if (IsInBounds(curPos + curForward* UNIT) && PathValid(curPos + curForward))
+        if (IsInBounds(curPos + curForward* UNIT) && PathValid(curPos + curForward* UNIT ,ref logOfPos))
         {
             curPos += curForward * UNIT;
             return true;
@@ -114,6 +103,7 @@ public class GenerateMazeCorridors : MonoBehaviour
         UNIT = gridUnit;
         PrepareCorridorObject();
         Vector2 cForward = Vector2.up;
+        Dictionary<Vector3,int> posToIndexLog = new Dictionary<Vector3, int>();
 
         Vector2 cPos = new Vector2(StartPos.x,StartPos.y);
 
@@ -121,10 +111,11 @@ public class GenerateMazeCorridors : MonoBehaviour
         for (int i = 0; i < numCorridors; i++)
         {
             //tile is valid
-            if (Step(ref cPos,ref cForward))
+            if (Step(ref cPos,ref cForward,ref posToIndexLog))
             {
                 corridors.Add(Instantiate(tempCorridor));
                 corridors[corridors.Count-1].transform.position = cPos;
+                posToIndexLog.Add(cPos,i);
             }
             
         }
