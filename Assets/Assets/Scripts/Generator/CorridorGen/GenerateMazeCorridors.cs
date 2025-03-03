@@ -25,6 +25,7 @@ public class GenerateMazeCorridors : MonoBehaviour
     void PrepareCorridorObject()
     {
         //creating template floor tile
+        tempCorridor = new GameObject();
         tempCorridor.name = "CorridorTile";
         tempCorridor.AddComponent<SpriteRenderer>();
         tempCorridor.GetComponent<SpriteRenderer>().sprite = tile;
@@ -117,6 +118,7 @@ public class GenerateMazeCorridors : MonoBehaviour
 
         //clean-up
         Destroy(tempCorridor);
+        print("Generated Maze with " + corridors.Count + " tiles.");
         return true;
     }
 

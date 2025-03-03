@@ -27,6 +27,7 @@ public class Configure : MonoBehaviour
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
     private GenerateRoom RoomGenScript;
     private SnapToGrid SnapToGrid;
+    private GenerateMazeCorridors MazeCorridors;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
     private Vector2 ConfinesCornerTopLeft = Vector2.zero;
@@ -197,6 +198,7 @@ public class Configure : MonoBehaviour
     {
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
+        MazeCorridors = GetComponentInParent<GenerateMazeCorridors>();
 
         SetConfines();
         SetSeed();
@@ -204,7 +206,9 @@ public class Configure : MonoBehaviour
         print("--DUNGEON GENERATOR SCRIPT START--\nSeed: " + seed);
         print("confined to area: (" + ConfinesCornerTopLeft.x + ", " + ConfinesCornerTopLeft.y + ") to (" + ConfinesCornerBottomRight.x + ", " + ConfinesCornerBottomRight.y + ").");
 
-        GenerateRooms();
+        print("Attempting to generate " + ATTEMPTS_ALLOWED + " tile big maze");
+        MazeCorridors.Exec(ConfinesCornerTopLeft, ConfinesCornerBottomRight, new Vector2(0.0f, 0.0f), DebugFloorTile, UNIT_SIZE, ATTEMPTS_ALLOWED);
+        //GenerateRooms();
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
