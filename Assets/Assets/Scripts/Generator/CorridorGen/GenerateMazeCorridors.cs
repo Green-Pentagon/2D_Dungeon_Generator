@@ -41,14 +41,12 @@ public class GenerateMazeCorridors : MonoBehaviour
                 vec.y > BoundsTopLeft.y || vec.y < BoundsBottomRight.y);
     }
 
-
-
-    bool PathValid(Vector3 Pos,ref Dictionary<Vector3,int> logOfPositions)
+    bool PathValid(Vector3 Pos,ref HashSet<Vector3> logOfPositions)
     {
-        return !logOfPositions.ContainsKey(Pos);
+        return !logOfPositions.Contains(Pos);
     }
 
-    bool Step(ref Vector2 curPos,ref Vector2 curForward, ref Dictionary<Vector3,int> logOfPos)
+    bool Step(ref Vector2 curPos,ref Vector2 curForward, ref HashSet<Vector3> logOfPos)
     {
         int directionRoll = Random.Range(1,5);
         switch (directionRoll)
@@ -103,7 +101,9 @@ public class GenerateMazeCorridors : MonoBehaviour
         UNIT = gridUnit;
         PrepareCorridorObject();
         Vector2 cForward = Vector2.up;
-        Dictionary<Vector3,int> posToIndexLog = new Dictionary<Vector3, int>();
+        //Dictionary<Vector3,int> posToIndexLog = new Dictionary<Vector3, int>();
+        HashSet<Vector3> posToIndexLog = new HashSet<Vector3>();
+
 
         Vector2 cPos = new Vector2(StartPos.x,StartPos.y);
 
@@ -115,7 +115,7 @@ public class GenerateMazeCorridors : MonoBehaviour
             {
                 corridors.Add(Instantiate(tempCorridor));
                 corridors[corridors.Count-1].transform.position = cPos;
-                posToIndexLog.Add(cPos,i);
+                posToIndexLog.Add(cPos);
             }
             
         }
