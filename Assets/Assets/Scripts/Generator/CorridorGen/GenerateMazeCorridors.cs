@@ -61,20 +61,33 @@ public class GenerateMazeCorridors : MonoBehaviour
 
     bool Step(ref Vector2 curPos,ref Vector2 curForward)
     {
-        int directionRoll = Random.Range(0,4);
+        int directionRoll = Random.Range(1,5);
         switch (directionRoll)
         {
             case 1:
-                curForward = Vector2.up;
+                if (IsInBounds(curPos + Vector2.up * UNIT))
+                {
+                    curForward = Vector2.up;
+                }
+                
                 break;
             case 2:
-                curForward = Vector2.down;
+                if (IsInBounds(curPos + Vector2.down * UNIT))
+                {
+                    curForward = Vector2.down;
+                }
                 break;
             case 3:
-                curForward = Vector2.left;
+                if (IsInBounds(curPos + Vector2.left * UNIT))
+                {
+                    curForward = Vector2.left;
+                }
                 break;
             case 4:
-                curForward = Vector2.right;
+                if (IsInBounds(curPos + Vector2.right * UNIT))
+                {
+                    curForward = Vector2.right;
+                }
                 break;
             default:
                 Debug.LogError("RUNTIME ERROR: IMPOSSIBLE CONDITION MET IN Step METHOD WITHIN GenerateMazeCorridors.cs SCRIPT");
@@ -111,7 +124,7 @@ public class GenerateMazeCorridors : MonoBehaviour
             if (Step(ref cPos,ref cForward))
             {
                 corridors.Add(Instantiate(tempCorridor));
-                corridors[corridors.Count].transform.position = cPos;
+                corridors[corridors.Count-1].transform.position = cPos;
             }
             
         }

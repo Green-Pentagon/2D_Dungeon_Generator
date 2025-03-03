@@ -210,8 +210,8 @@ public class Configure : MonoBehaviour
         MazeCorridors.Exec(ConfinesCornerTopLeft, ConfinesCornerBottomRight, new Vector2(0.0f, 0.0f), DebugFloorTile, UNIT_SIZE, ATTEMPTS_ALLOWED);
         //GenerateRooms();
 
-        SnapToGrid.Run(rooms, UNIT_SIZE);
-        EnableWallTileColliders(rooms);
+        //SnapToGrid.Run(rooms, UNIT_SIZE);
+        //EnableWallTileColliders(rooms);
     }
 
     // Update is called once per frame
