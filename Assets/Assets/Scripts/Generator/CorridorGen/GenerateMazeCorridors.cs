@@ -31,16 +31,65 @@ public class GenerateMazeCorridors : MonoBehaviour
         tempCorridor.GetComponent<Transform>().localScale = new Vector3(1.0f * UNIT, 1.0f * UNIT, 1.0f);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    bool IsInBounds(Vector2 vec)
     {
-
+        return !(vec.x > BoundsBottomRight.x && vec.x < BoundsTopLeft.x &&
+                vec.y > BoundsTopLeft.y && vec.y < BoundsBottomRight.y);
     }
 
-    // Update is called once per frame
-    void Update()
+    bool PathValid(Vector3 Pos)
     {
-        
+        bool valid = false;
+
+        GameObject temp = new GameObject();
+        temp.transform.position = Pos;
+        temp.AddComponent<BoxCollider2D>();
+        temp.GetComponent<BoxCollider2D>().size = new Vector2(UNIT/2.0f, UNIT/2.0f);
+
+        ContactFilter2D fltr = new ContactFilter2D();
+        List<Collider2D> result = new List<Collider2D>();
+        int numColliders = Physics2D.OverlapCollider(temp.GetComponent<BoxCollider2D>(), fltr, result);
+
+
+        Destroy(temp);
+
+        valid = numColliders == 0;
+
+        return valid;
+    }
+
+    bool Step(ref Vector2 curPos,ref Vector2 curForward)
+    {
+        int directionRoll = Random.Range(0,4);
+        switch (directionRoll)
+        {
+            case 1:
+                curForward = Vector2.up;
+                break;
+            case 2:
+                curForward = Vector2.down;
+                break;
+            case 3:
+                curForward = Vector2.left;
+                break;
+            case 4:
+                curForward = Vector2.right;
+                break;
+            default:
+                Debug.LogError("RUNTIME ERROR: IMPOSSIBLE CONDITION MET IN Step METHOD WITHIN GenerateMazeCorridors.cs SCRIPT");
+                break;
+        }
+
+        //check if place to step is valid
+        if (IsInBounds(curPos + curForward* UNIT) && PathValid(curPos + curForward))
+        {
+            curPos += curForward * UNIT;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool Exec(Vector2 TopLeftBound, Vector2 BottomRightBound,Vector2 StartPos, Sprite corridorTile, float gridUnit, int numCorridors)
@@ -50,14 +99,20 @@ public class GenerateMazeCorridors : MonoBehaviour
         SetCorridorTile(corridorTile);
         UNIT = gridUnit;
         PrepareCorridorObject();
+        Vector2 cForward = Vector2.up;
 
-        Vector3 cPos = new Vector3(StartPos.x,StartPos.y,0.0f);
+        Vector2 cPos = new Vector2(StartPos.x,StartPos.y);
 
         //begin process
         for (int i = 0; i < numCorridors; i++)
         {
-            corridors.Add(Instantiate(tempCorridor));
-            corridors[corridors.Count].transform.position = cPos;
+            //tile is valid
+            if (Step(ref cPos,ref cForward))
+            {
+                corridors.Add(Instantiate(tempCorridor));
+                corridors[corridors.Count].transform.position = cPos;
+            }
+            
         }
 
         //clean-up
@@ -65,4 +120,16 @@ public class GenerateMazeCorridors : MonoBehaviour
         return true;
     }
 
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }
