@@ -43,19 +43,26 @@ public class GenerateMazeCorridors : MonoBehaviour
         
     }
 
-    public void Exec(Vector2 TopLeftBound, Vector2 BottomRightBound, Sprite corridorTile, float gridUnit, int numCorridors)
+    public bool Exec(Vector2 TopLeftBound, Vector2 BottomRightBound,Vector2 StartPos, Sprite corridorTile, float gridUnit, int numCorridors)
     {
+        //set up values
         SetBounds(TopLeftBound, BottomRightBound);
         SetCorridorTile(corridorTile);
         UNIT = gridUnit;
         PrepareCorridorObject();
 
+        Vector3 cPos = new Vector3(StartPos.x,StartPos.y,0.0f);
+
+        //begin process
         for (int i = 0; i < numCorridors; i++)
         {
-
+            corridors.Add(Instantiate(tempCorridor));
+            corridors[corridors.Count].transform.position = cPos;
         }
 
+        //clean-up
         Destroy(tempCorridor);
+        return true;
     }
 
 }
