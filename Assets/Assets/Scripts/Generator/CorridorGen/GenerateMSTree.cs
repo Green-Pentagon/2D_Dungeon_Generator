@@ -1,3 +1,10 @@
+//TO DO:
+//- TEST THAT THE DICTIONARY CHANGE WORKS, COPY PASTE INTO OLDER CODE IF NEED TO TEST IT, WEEK 9 OF DATASTRUCTURES WORK
+//- look into how to make an MS Tree
+//- current methodolgy won't work in connecting all the rooms together
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
