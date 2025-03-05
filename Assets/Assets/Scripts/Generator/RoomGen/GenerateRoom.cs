@@ -1,23 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Room
+public class Room : IComparable
 {
     private GameObject roomObj;
     private int roomId;
+    private Vector2 roomCentre;
 
     public Room(GameObject room)
     {
         roomObj = room;
+        roomCentre = new Vector2(room.transform.position.x,room.transform.position.y);
     }
-
-    //~Room()
-    //{
-        
-    //}
 
     public Room(GameObject room, int id)
     {
@@ -31,6 +29,13 @@ public class Room
     }
     public int GetRoomId() { return roomId; }
     public ref GameObject GetRoom() { return ref roomObj; }
+    public Vector2 GetRoomCentre() { return roomCentre; }
+
+    public int CompareTo(object other)
+    {
+        Room t = (Room)other;
+        return roomId.CompareTo(t.roomId);
+    }
 }
 
 
