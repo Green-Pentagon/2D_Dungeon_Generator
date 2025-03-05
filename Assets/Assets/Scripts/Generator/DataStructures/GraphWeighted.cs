@@ -1,3 +1,6 @@
+//TO DO:
+//- rewrite internals to use a min or a max heap instead of a linked list for storing.
+
 //code re-used from previous github repo project
 //https://github.com/Green-Pentagon/UNI_Year2_Algorithms_Unit
 
@@ -8,31 +11,41 @@ using System.Linq;
 using UnityEngine;
 
 
-internal class GraphNode<T> where T : IComparable
+public class GraphNode<T> where T : IComparable
 {
     T id;
-    LinkedList<T> adjList;
-    LinkedList<float> weightList;
+    //LinkedList<T> adjList;
+    //LinkedList<float> weightList;
+
+    Dictionary<T, float> weightMap;
+
     //=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
     public GraphNode(T id)
     {
         this.id = id;
-        adjList = new LinkedList<T>();
-        weightList = new LinkedList<float>();
+        //adjList = new LinkedList<T>();
+        //weightList = new LinkedList<float>();
     }
     public T ID { get { return id; } }
-    public LinkedList<T> AdjList { get { return adjList; } }
-    public LinkedList<float> WeightList { get { return weightList; } }
+    public Dictionary<T,float>.KeyCollection AdjList { get { return weightMap.Keys; } }
+    public Dictionary<T, float>.ValueCollection WeightList { get { return weightMap.Values; } }
     //=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
     public void AddEdge(GraphNode<T> graphNode)
     {
-        adjList.AddLast(graphNode.ID);
-        weightList.AddLast(1.0f);//default weight value
+        weightMap.TryAdd(graphNode.ID,-1.0f);
+        //adjList.AddLast(graphNode.ID);
+        //weightList.AddLast(-1.0f);//default weight value
     }
     public void AddEdge(GraphNode<T> graphNode, float weight)
     {
-        adjList.AddLast(graphNode.ID);
-        weightList.AddLast(weight);
+        weightMap.TryAdd(graphNode.ID, weight);
+        //adjList.AddLast(graphNode.ID);
+        //weightList.AddLast(weight);
+    }
+
+    public void RemoveEdge(T ToID)
+    {
+        weightMap.Remove(ToID);
     }
 }
 
@@ -360,9 +373,33 @@ public class GraphWeighted<T> where T : IComparable
             List<T> connectedNodes = Ingoing(id);//collect all ingoing nodes
             foreach (T nodeID in connectedNodes)//for every node with connections to the node we wish to remove
             {
-                GetNodeByID(nodeID).AdjList.Remove(id);//remove the edge connecting the nodes
+                GetNodeByID(nodeID).RemoveEdge(id);
+                //GetNodeByID(nodeID).AdjList.Remove(id);//remove the edge connecting the nodes
             }
             nodes.Remove(GetNodeByID(id));//finally remove the node when all ingoing connections are cut.
+        }
+        else
+        {
+            Console.WriteLine("Node of matching ID not found in the graph");
+        }
+    }
+    
+    public void RemoveEdge(T To,T From)
+    {
+        if (Contains(To) && Contains(From))//if node exists in the graph
+        {
+            List<T> ToconnectedNodes = Ingoing(To);//collect all ingoing nodes
+            List<T> FromconnectedNodes = Ingoing(From);//collect all ingoing nodes
+            foreach (T nodeID in ToconnectedNodes)//for every node with connections to the node we wish to remove
+            {
+                GetNodeByID(nodeID).RemoveEdge(From);//remove the edge connecting the nodes
+            }
+            foreach (T nodeID in FromconnectedNodes)//for every node with connections to the node we wish to remove
+            {
+                GetNodeByID(nodeID).RemoveEdge(To);//remove the edge connecting the nodes
+            }
+            
+
         }
         else
         {
