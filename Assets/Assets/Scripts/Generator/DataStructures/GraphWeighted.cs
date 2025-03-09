@@ -15,7 +15,7 @@ public class GraphNode<T> where T : IComparable
 {
     T id;
     bool visited = false;
-    Dictionary<T, float> weightMap;
+    Dictionary<T, float> weightMap = new Dictionary<T, float>();
 
     //=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
     public GraphNode(T id)

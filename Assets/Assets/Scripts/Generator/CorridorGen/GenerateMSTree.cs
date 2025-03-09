@@ -112,12 +112,15 @@ public class GenerateMSTree : MonoBehaviour
         
     }
 
-    void Exec(ref List<Room> rooms)
+    public void Exec(ref List<Room> rooms)
     {
         roomGraph = new GraphWeighted<int>();
         END_ID = rooms.Count - 1;
+        Debug.Log("Generating a full graph...");
         PopulateGraph(ref rooms);
-
+        Debug.Log("Converting Graph into MS Tree...");
+        ConvertIntoMSTree();
+        //Debug.Log("Adding % chance for loop in graph?"); // could also do this inside of the MS tree method with a probability chance governed by seed.
 
     }
 }
