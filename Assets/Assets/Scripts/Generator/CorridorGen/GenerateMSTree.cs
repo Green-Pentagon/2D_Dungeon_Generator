@@ -108,6 +108,65 @@ public class GenerateMSTree : MonoBehaviour
 
     }
     
+    bool DebugIsEveryRoomReachable()
+    {
+        bool output = true;
+        int cID = START_ID;
+
+        while (cID != END_ID)
+        {
+            cID++;
+            //initialise the variables for search
+            Queue<int> nodeQueue = new Queue<int>();
+            int curNode;
+
+            HashSet<int> Visited = new HashSet<int>();
+            Visited.Add(START_ID);
+            int[] prevIDs = new int[END_ID + 1]; // build path from refs to previous
+            prevIDs[START_ID] = -1; //mark the start for the crawl back to find the depth
+                                    //int degreeSeperation = -1;
+            bool found = false;
+
+            nodeQueue.Enqueue(START_ID);
+
+            //start Breadth-first search
+            while (nodeQueue.Count > 0)
+            {
+                curNode = nodeQueue.Dequeue();
+
+                //if found end, break out of process
+                if (curNode == cID)
+                {
+                    found = true;
+                    break;
+                }
+
+                //for each adjList connection, queue any unvisited nodes to visit
+                foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
+                {
+                    if (!roomGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
+                    {
+                        //Console.WriteLine("pushing " + adjID);
+                        roomGraph.GetNodeByID(adjID).SetVisited(true);
+                        //nodesVisited[adjID] = true;
+                        prevIDs[adjID] = curNode;
+                        Visited.Add(adjID);
+                        nodeQueue.Enqueue(adjID);
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                return false;
+            }
+            
+        }
+        
+
+        return output;
+    }
+
     void Start()
     {
         
@@ -127,6 +186,7 @@ public class GenerateMSTree : MonoBehaviour
         PopulateGraph(ref rooms);
         Debug.Log("Converting Graph into MS Tree...");
         ConvertIntoMSTree();
+        Debug.Log("Is every room reachable from roomID 0 = " + DebugIsEveryRoomReachable());
         //Debug.Log("Adding % chance for loop in graph?"); // could also do this inside of the MS tree method with a probability chance governed by seed.
 
     }
