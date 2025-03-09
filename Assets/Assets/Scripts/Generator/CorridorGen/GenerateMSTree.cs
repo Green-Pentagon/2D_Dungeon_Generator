@@ -56,17 +56,17 @@ public class GenerateMSTree : MonoBehaviour
 
         nodeQueue.Enqueue(START_ID);
 
-        ////start Breadth-first search
+        //start Breadth-first search
         while (nodeQueue.Count > 0)
         {
             curNode = nodeQueue.Dequeue();
 
             //if found end, break out of process
-            if (curNode == END_ID)
-            {
-                found = true;
-                break;
-            }
+            //if (curNode == END_ID)
+            //{
+            //    found = true;
+            //    break;
+            //}
 
             //for each adjList connection, queue any unvisited nodes to visit
             foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
@@ -83,6 +83,8 @@ public class GenerateMSTree : MonoBehaviour
             }
         }
 
+        found = true;
+
         //determine the degree of seperation
         //crawls backwards through the path
         if (found)
@@ -92,8 +94,10 @@ public class GenerateMSTree : MonoBehaviour
             while (curNode != -1)
             {
                 roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(prevIDs[curNode]);
-                Debug.Log(roomGraph.GetNodeByID(curNode).AdjList);
-                curNode = prevIDs[curNode];
+                Debug.Log(curNode + " connects to " + roomGraph.GetNodeByID(curNode).AdjList.ElementAt(0) + " with a weight value " + roomGraph.GetNodeByID(curNode).WeightList.ElementAt(0));
+                Debug.Log(curNode + " contains " + roomGraph.GetNodeByID(curNode).AdjList.Count + " connections");
+                curNode--;
+                //curNode = prevIDs[curNode];
             }
         }
 
