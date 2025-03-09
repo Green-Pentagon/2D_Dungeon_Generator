@@ -14,9 +14,7 @@ using UnityEngine;
 public class GraphNode<T> where T : IComparable
 {
     T id;
-    //LinkedList<T> adjList;
-    //LinkedList<float> weightList;
-
+    bool visited = false;
     Dictionary<T, float> weightMap;
 
     //=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
@@ -47,6 +45,25 @@ public class GraphNode<T> where T : IComparable
     {
         weightMap.Remove(ToID);
     }
+
+    public void RemoveAllEdgesExcluding(T ToID)
+    {
+        float temp;
+        try
+        {
+            temp = weightMap[ToID];
+        }
+        catch (Exception e) {
+            return;
+        }
+        
+        weightMap.Clear();
+        weightMap.Add(ToID, temp);
+
+    }
+
+    public bool GetVisited() { return visited; }
+    public void SetVisited(bool status) { visited = status; }
 }
 
 public class GraphWeighted<T> where T : IComparable

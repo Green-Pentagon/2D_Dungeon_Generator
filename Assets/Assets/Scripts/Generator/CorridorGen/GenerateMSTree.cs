@@ -5,8 +5,10 @@
 
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -39,60 +41,61 @@ public class GenerateMSTree : MonoBehaviour
         }
     }
 
-    void ConvertIntoMSTree() { 
+    void ConvertIntoMSTree() {
 
-        ////initialise the variables for search
-        //Queue<int> nodeQueue = new Queue<int>();
-        //int curNode;
-        
-        //HashSet<int> Visited = new HashSet<int>();
-        //Visited.Add(START);
-        //int[] prevIDs = new int[nx*ny]; // build path from refs to previous
-        //prevIDs[START] = -1; //mark the start for the crawl back to find the depth
-        ////int degreeSeperation = -1;
-        //bool found = false;
+        //initialise the variables for search
+        Queue<int> nodeQueue = new Queue<int>();
+        int curNode;
 
-        //nodeQueue.Enqueue(START);
+        HashSet<int> Visited = new HashSet<int>();
+        Visited.Add(START_ID);
+        int[] prevIDs = new int[END_ID+1]; // build path from refs to previous
+        prevIDs[START_ID] = -1; //mark the start for the crawl back to find the depth
+        //int degreeSeperation = -1;
+        bool found = false;
 
-        //////start Breadth-first search
-        //while (nodeQueue.Count > 0)
-        //{
-        //    curNode = nodeQueue.Dequeue();
+        nodeQueue.Enqueue(START_ID);
 
-        //    //if found end, break out of process
-        //    if (curNode == END)
-        //    {
-        //        found = true;
-        //        break;
-        //    }
+        ////start Breadth-first search
+        while (nodeQueue.Count > 0)
+        {
+            curNode = nodeQueue.Dequeue();
 
-        //    //for each adjList connection, queue any unvisited nodes to visit
-        //    foreach (int adjID in mazeGraph.GetNodeByID(curNode).AdjList)
-        //    {
-        //        if (!mazeGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
-        //        {
-        //            Console.WriteLine("pushing " + adjID);
-        //            mazeGraph.GetNodeByID(adjID).SetVisited(true);
-        //            //nodesVisited[adjID] = true;
-        //            prevIDs[adjID] = curNode;
-        //            Visited.Add(adjID);
-        //            nodeQueue.Enqueue(adjID);
-        //        }
-        //    }
-        //}
+            //if found end, break out of process
+            if (curNode == END_ID)
+            {
+                found = true;
+                break;
+            }
 
-        ////determine the degree of seperation
-        ////crawls backwards through the path
-        //if (found)
-        //{
-        //    Console.WriteLine("END = " + END);
-        //    curNode = END;
-        //    while (curNode != -1)
-        //    {
-        //        shortestPath++;
-        //        curNode = prevIDs[curNode];
-        //    }
-        //}
+            //for each adjList connection, queue any unvisited nodes to visit
+            foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
+            {
+                if (!roomGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
+                {
+                    //Console.WriteLine("pushing " + adjID);
+                    roomGraph.GetNodeByID(adjID).SetVisited(true);
+                    //nodesVisited[adjID] = true;
+                    prevIDs[adjID] = curNode;
+                    Visited.Add(adjID);
+                    nodeQueue.Enqueue(adjID);
+                }
+            }
+        }
+
+        //determine the degree of seperation
+        //crawls backwards through the path
+        if (found)
+        {
+            //Console.WriteLine("END = " + END);
+            curNode = END_ID;
+            while (curNode != -1)
+            {
+                roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(prevIDs[curNode]);
+                Debug.Log(roomGraph.GetNodeByID(curNode).AdjList);
+                curNode = prevIDs[curNode];
+            }
+        }
 
 
 
