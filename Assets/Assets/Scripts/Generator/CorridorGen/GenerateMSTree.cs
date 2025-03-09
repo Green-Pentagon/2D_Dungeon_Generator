@@ -1,7 +1,10 @@
 //TO DO:
-//- TEST THAT THE DICTIONARY CHANGE WORKS, COPY PASTE INTO OLDER CODE IF NEED TO TEST IT, WEEK 9 OF DATASTRUCTURES WORK
-//- look into how to make an MS Tree
-//- current methodolgy won't work in connecting all the rooms together
+// - actually make the tree into an MS Tree (delunrey triangulation or whatever it was called)
+// - alternatively, you can convert the tree into an MS tree by:
+//      - Checking that all outgoing connections from every room ID is 1
+//      - If not, remove the larger weighted connection
+//      - go through the tree again and connect any isolated clusters & unite them into a single tree (tougher than it sounds)
+// - Could further literacy review by re-adapting potential discovered methods of making an MS Tree in the future.
 
 
 
@@ -93,7 +96,7 @@ public class GenerateMSTree : MonoBehaviour
             curNode = END_ID;
             while (curNode != -1)
             {
-                roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(prevIDs[curNode]);
+                roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(roomGraph.LowestEdge(curNode));
                 Debug.Log(curNode + " connects to " + roomGraph.GetNodeByID(curNode).AdjList.ElementAt(0) + " with a weight value " + roomGraph.GetNodeByID(curNode).WeightList.ElementAt(0));
                 Debug.Log(curNode + " contains " + roomGraph.GetNodeByID(curNode).AdjList.Count + " connections");
                 curNode--;
