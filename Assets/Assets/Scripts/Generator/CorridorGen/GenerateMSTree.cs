@@ -82,7 +82,12 @@ public class GenerateMSTree : MonoBehaviour
                     prevIDs[adjID] = curNode;
                     Visited.Add(adjID);
                     nodeQueue.Enqueue(adjID);
+
+                    //Culls all other connected edges
+                    roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(adjID);
+                    break;
                 }
+
             }
         }
 
@@ -113,11 +118,9 @@ public class GenerateMSTree : MonoBehaviour
         bool output = true;
         int cID = START_ID;
 
-        while (cID != END_ID)
-        {
-            cID++;
+
             //initialise the variables for search
-            Queue<int> nodeQueue = new Queue<int>();
+            Stack<int> nodeStack = new Stack<int>();
             int curNode;
 
             HashSet<int> Visited = new HashSet<int>();
@@ -127,12 +130,12 @@ public class GenerateMSTree : MonoBehaviour
                                     //int degreeSeperation = -1;
             bool found = false;
 
-            nodeQueue.Enqueue(START_ID);
+            nodeStack.Push(START_ID);
 
             //start Breadth-first search
-            while (nodeQueue.Count > 0)
+            while (nodeStack.Count > 0)
             {
-                curNode = nodeQueue.Dequeue();
+                curNode = nodeStack.Pop();
 
                 //if found end, break out of process
                 if (curNode == cID)
@@ -151,7 +154,7 @@ public class GenerateMSTree : MonoBehaviour
                         //nodesVisited[adjID] = true;
                         prevIDs[adjID] = curNode;
                         Visited.Add(adjID);
-                        nodeQueue.Enqueue(adjID);
+                        nodeStack.Push(adjID);
                     }
                 }
             }
@@ -160,8 +163,7 @@ public class GenerateMSTree : MonoBehaviour
             {
                 return false;
             }
-            
-        }
+        
         
 
         return output;
