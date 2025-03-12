@@ -27,6 +27,7 @@ public class Configure : MonoBehaviour
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
     private GenerateRoom RoomGenScript;
     private SnapToGrid SnapToGrid;
+    private GenerateMSTree MSTreeGenScript;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
     private Vector2 ConfinesCornerTopLeft = Vector2.zero;
@@ -197,6 +198,7 @@ public class Configure : MonoBehaviour
     {
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
+        MSTreeGenScript = GetComponentInParent<GenerateMSTree>();
 
         SetConfines();
         SetSeed();
@@ -208,6 +210,7 @@ public class Configure : MonoBehaviour
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
+        MSTreeGenScript.Exec(ref rooms);
     }
 
     // Update is called once per frame
