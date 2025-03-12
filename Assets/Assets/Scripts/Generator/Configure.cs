@@ -211,6 +211,7 @@ public class Configure : MonoBehaviour
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
         MSTreeGenScript.Exec(ref rooms);
+        MSTreeGenScript.debugDrawConnections(rooms);
     }
 
     // Update is called once per frame

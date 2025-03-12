@@ -3,8 +3,6 @@
 //- look into how to make an MS Tree
 //- current methodolgy won't work in connecting all the rooms together
 
-
-
 // - actually make the tree into an MS Tree (delunrey triangulation or whatever it was called)
 // - alternatively, you can convert the tree into an MS tree by:
 //      - Checking that all outgoing connections from every room ID is 1
@@ -88,7 +86,7 @@ public class GenerateMSTree : MonoBehaviour
                     nodeQueue.Enqueue(adjID);
 
                     //Culls all other connected edges
-                    roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(adjID);
+                    roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(roomGraph.LowestEdge(curNode));
                     break;
                 }
 
@@ -120,7 +118,7 @@ public class GenerateMSTree : MonoBehaviour
     bool DebugIsEveryRoomReachable()
     {
         bool output = true;
-        int cID = START_ID;
+        int counter = 1;
 
 
             //initialise the variables for search
@@ -132,7 +130,6 @@ public class GenerateMSTree : MonoBehaviour
             int[] prevIDs = new int[END_ID + 1]; // build path from refs to previous
             prevIDs[START_ID] = -1; //mark the start for the crawl back to find the depth
                                     //int degreeSeperation = -1;
-            bool found = false;
 
             nodeStack.Push(START_ID);
 
@@ -140,13 +137,9 @@ public class GenerateMSTree : MonoBehaviour
             while (nodeStack.Count > 0)
             {
                 curNode = nodeStack.Pop();
-
+                
                 //if found end, break out of process
-                if (curNode == cID)
-                {
-                    found = true;
-                    break;
-                }
+                
 
                 //for each adjList connection, queue any unvisited nodes to visit
                 foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
@@ -154,6 +147,7 @@ public class GenerateMSTree : MonoBehaviour
                     if (!roomGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
                     {
                         //Console.WriteLine("pushing " + adjID);
+                        counter++;
                         roomGraph.GetNodeByID(adjID).SetVisited(true);
                         //nodesVisited[adjID] = true;
                         prevIDs[adjID] = curNode;
@@ -163,7 +157,7 @@ public class GenerateMSTree : MonoBehaviour
                 }
             }
 
-            if (!found)
+            if (counter == roomGraph.NumNodes())
             {
                 return false;
             }
@@ -171,6 +165,20 @@ public class GenerateMSTree : MonoBehaviour
         
 
         return output;
+    }
+
+
+    public void debugDrawConnections(List<Room> rooms)
+    {
+        int nID = -1;
+
+        Vector2 prevRoomCentre = rooms.ElementAt(0).GetRoomCentre();
+
+        for (int cID = 0; cID < roomGraph.NumNodes(); cID++)
+        {
+            nID = roomGraph.GetNodeByID(cID).AdjList.ElementAt(0);
+            Debug.DrawLine(rooms.ElementAt(cID).GetRoomCentre(), rooms.ElementAt(nID).GetRoomCentre(), Color.red, 900.0f);
+        }
     }
 
     void Start()
