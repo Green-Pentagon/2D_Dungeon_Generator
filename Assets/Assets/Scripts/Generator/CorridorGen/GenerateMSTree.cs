@@ -39,7 +39,7 @@ public class GenerateMSTree : MonoBehaviour
             {
                 if (room.GetRoomId() != room2.GetRoomId())
                 {
-                    roomGraph.AddEdge(room.GetRoomId(), room2.GetRoomId(), (room.GetRoomCentre() + room2.GetRoomCentre()).magnitude);
+                    roomGraph.AddEdge(room.GetRoomId(), room2.GetRoomId(), MathF.Abs((room.GetRoomCentre() - room2.GetRoomCentre()).magnitude));
                 }
             }
 
@@ -65,13 +65,6 @@ public class GenerateMSTree : MonoBehaviour
         while (nodeQueue.Count > 0)
         {
             curNode = nodeQueue.Dequeue();
-
-            //if found end, break out of process
-            //if (curNode == END_ID)
-            //{
-            //    found = true;
-            //    break;
-            //}
 
             //for each adjList connection, queue any unvisited nodes to visit
             foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
