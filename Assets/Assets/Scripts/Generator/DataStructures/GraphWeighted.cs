@@ -53,12 +53,30 @@ public class GraphNode<T> where T : IComparable
         {
             temp = weightMap[ToID];
         }
-        catch (Exception e) {
+        catch {
             return;
         }
         
         weightMap.Clear();
         weightMap.Add(ToID, temp);
+
+    }
+
+    public void RemoveAllEdgesExcluding(T[] ToID)
+    {
+        Dictionary<T, float> temp = new Dictionary<T, float>();
+        foreach (T ID in ToID)
+        {
+            try
+            {
+                temp.Add(ID,weightMap[ID]);
+            }
+            catch 
+            {
+                return;
+            }
+        }
+        weightMap = temp;
 
     }
 
