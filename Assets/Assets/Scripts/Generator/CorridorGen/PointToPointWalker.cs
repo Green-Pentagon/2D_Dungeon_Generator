@@ -55,19 +55,6 @@ public class PointToPointWalker : MonoBehaviour
         }
     }
     
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList)
     {
         UNIT = unit;
@@ -88,7 +75,7 @@ public class PointToPointWalker : MonoBehaviour
         Debug.Log("Path list populated, beginning Walk...");
         Walk();
         Debug.Log("Walk Complete, Cleaning Up...");
-        //destroy tiles which intersect rooms and oneanother
-        Destroy(Tile);
+        //DestroyImmediate tiles which intersect rooms and oneanother
+        DestroyImmediate(Tile);
     }
 }

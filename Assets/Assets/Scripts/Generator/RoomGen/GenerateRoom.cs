@@ -47,20 +47,6 @@ public class Room : IComparable
 
 public class GenerateRoom : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     public Room CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
     {
@@ -115,8 +101,8 @@ public class GenerateRoom : MonoBehaviour
             }
         }
 
-        Destroy(floorTile);
-        Destroy(wallTile);
+        DestroyImmediate(floorTile);
+        DestroyImmediate(wallTile);
 
         room.GetComponent<Transform>().position = offset * unit;
 

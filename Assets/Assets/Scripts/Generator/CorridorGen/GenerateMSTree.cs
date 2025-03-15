@@ -187,17 +187,6 @@ public class GenerateMSTree : MonoBehaviour
         return roomGraph.GetEdges(); 
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Exec(ref List<Room> rooms)
     {
         roomGraph = new GraphWeighted<int>();

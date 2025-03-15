@@ -53,7 +53,7 @@ public class Configure : MonoBehaviour
     [Space(2, order = 3)]
 
     //room count sliders
-    [Range(2,30), Tooltip("WARNING: High room counts may impact performance!")]
+    [Range(2, 30), Tooltip("WARNING: High room counts may impact performance!")]
     public int numberOfRooms;
 
     //room width sliders
@@ -96,7 +96,7 @@ public class Configure : MonoBehaviour
     //----------------------------------
     //Class Methods
     //----------------------------------
-    
+
     void SetConfines()
     {
         //(-x,y)
@@ -152,7 +152,7 @@ public class Configure : MonoBehaviour
             }
             else
             {
-                Destroy(tempRoom.GetRoom());
+                DestroyImmediate(tempRoom.GetRoom());
                 tempRoom = null;
             }
         }
@@ -164,15 +164,15 @@ public class Configure : MonoBehaviour
 
         print("Generated " + rooms.Count + " rooms in " + cAttempt + " attempts.");
     }
-    
+
     void EnableWallTileColliders(List<Room> roomList)
     {
         //goes through every tile in every room & enables all box colliders
         foreach (Room room in roomList)
         {
-            //destroys the box-collider used for seperation.
-            Destroy(room.GetRoom().GetComponent<BoxCollider2D>());
-            //Destroy(room.GetComponent<Rigidbody2D>());
+            //DestroyImmediates the box-collider used for seperation.
+            DestroyImmediate(room.GetRoom().GetComponent<BoxCollider2D>());
+            //DestroyImmediate(room.GetComponent<Rigidbody2D>());
 
             //re-enables wall tile collisions.
             for (int i = 0; i < room.GetRoom().transform.childCount; i++)
@@ -190,14 +190,14 @@ public class Configure : MonoBehaviour
     {
         ContactFilter2D fltr = new ContactFilter2D();
         List<Collider2D> result = new List<Collider2D>();
-        
+
         int numColliders = Physics2D.OverlapCollider(givenRoom.GetComponent<BoxCollider2D>(), fltr, result);
 
         return numColliders != 0;
     }
 
 
-    void Start()
+    public void Exec()
     {
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
@@ -217,13 +217,9 @@ public class Configure : MonoBehaviour
         MSTreeGenScript.Exec(ref rooms);
         MSTreeGenScript.debugDrawConnections(rooms);
 
-        PointToPointWalker.Exec(UNIT_SIZE,DebugFloorTile, rooms,MSTreeGenScript.GetEdgeList());
+        PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile, rooms, MSTreeGenScript.GetEdgeList());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
     //----------------------------------
 }
