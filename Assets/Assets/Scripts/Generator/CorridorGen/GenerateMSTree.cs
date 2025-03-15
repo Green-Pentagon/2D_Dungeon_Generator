@@ -174,6 +174,11 @@ public class GenerateMSTree : MonoBehaviour
         }
     }
 
+    public List<Tuple<int, int, float>> GetEdgeList()
+    {
+        return roomGraph.GetEdges(); 
+    }
+
     void Start()
     {
         

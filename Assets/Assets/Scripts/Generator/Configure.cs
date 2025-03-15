@@ -28,6 +28,7 @@ public class Configure : MonoBehaviour
     private GenerateRoom RoomGenScript;
     private SnapToGrid SnapToGrid;
     private GenerateMSTree MSTreeGenScript;
+    private PointToPointWalker PointToPointWalker;
     private int[] roomWidthRange = { 3, 100 };
     private int[] roomHeightRange = { 3, 100 };
     private Vector2 ConfinesCornerTopLeft = Vector2.zero;
@@ -199,6 +200,7 @@ public class Configure : MonoBehaviour
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
         MSTreeGenScript = GetComponentInParent<GenerateMSTree>();
+        PointToPointWalker = GetComponentInParent<PointToPointWalker>();
 
         SetConfines();
         SetSeed();
@@ -212,6 +214,8 @@ public class Configure : MonoBehaviour
         EnableWallTileColliders(rooms);
         MSTreeGenScript.Exec(ref rooms);
         MSTreeGenScript.debugDrawConnections(rooms);
+
+        PointToPointWalker.Exec(UNIT_SIZE,DebugWallTile, rooms,MSTreeGenScript.GetEdgeList());
     }
 
     // Update is called once per frame
