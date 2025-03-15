@@ -27,6 +27,7 @@ public class GraphNode<T> where T : IComparable
     public T ID { get { return id; } }
     public Dictionary<T,float>.KeyCollection AdjList { get { return weightMap.Keys; } }
     public Dictionary<T, float>.ValueCollection WeightList { get { return weightMap.Values; } }
+    public ref Dictionary<T,float> WeightMap { get { return ref weightMap; } }
     //=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=
     public void AddEdge(GraphNode<T> graphNode)
     {
@@ -346,6 +347,18 @@ public class GraphWeighted<T> where T : IComparable
 
     }
 
+    public List<Tuple<T,T,float>> GetEdges()
+    {
+        List<Tuple<T,T, float>> edges = new List<Tuple<T,T, float>>();
+        foreach (GraphNode<T> node in nodes)
+        {
+            foreach (T id in node.AdjList)
+            {
+                edges.Add(new Tuple<T, T, float>(node.ID,id, node.WeightMap[id]));
+            }
+        }
+        return edges;
+    }
     public string DegreeCentralities()
     {
         //ID will not print if unable to be converted into string format

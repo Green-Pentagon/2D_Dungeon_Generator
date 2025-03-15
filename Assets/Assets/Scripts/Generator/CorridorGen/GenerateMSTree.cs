@@ -197,4 +197,9 @@ public class GenerateMSTree : MonoBehaviour
         //Debug.Log("Adding % chance for loop in graph?"); // could also do this inside of the MS tree method with a probability chance governed by seed.
 
     }
+
+    public ref GraphWeighted<int> GetGraph()
+    {
+        return ref roomGraph;
+    }
 }

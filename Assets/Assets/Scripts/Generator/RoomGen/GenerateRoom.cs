@@ -7,29 +7,35 @@ using UnityEngine.UIElements;
 
 public class Room : IComparable
 {
+    private float UNIT;
+    private float width;
+    private float height;
     private GameObject roomObj;
     private int roomId;
     private Vector2 roomCentre;
 
-    public Room(GameObject room)
+    public Room(GameObject room, float width, float height, float unit)
     {
         roomObj = room;
-        roomCentre = new Vector2(room.transform.position.x,room.transform.position.y);
+        roomCentre = new Vector2(room.transform.position.x + (width/2.0f * unit),room.transform.position.y + (height / 2.0f * unit));
     }
 
-    public Room(GameObject room, int id)
-    {
-        roomId = id;
-        roomObj = room;
-    }
+    //public Room(GameObject room, int id)
+    //{
+    //    roomId = id;
+    //    roomObj = room;
+    //}
 
     public void SetId(int newId)
     {
         roomId = newId;
     }
-    public int GetRoomId() { return roomId; }
+    public ref int GetRoomId() { return ref roomId; }
     public ref GameObject GetRoom() { return ref roomObj; }
     public Vector2 GetRoomCentre() { return roomCentre; }
+
+    public ref float GetWidth() { return ref  width; }
+    public ref float GetHeight() { return ref  height; }
 
     public int CompareTo(object other)
     {
@@ -125,6 +131,6 @@ public class GenerateRoom : MonoBehaviour
         room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit + (2f*unit), height * unit + (2f * unit));
         
 
-        return new Room(room);
+        return new Room(room,width,height,unit);
     }
 }
