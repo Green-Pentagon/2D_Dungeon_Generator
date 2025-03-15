@@ -16,8 +16,6 @@ public class PointToPointWalker : MonoBehaviour
     {
         Vector2 curPos;
         GameObject curTile;
-        int infLoopCatcher = 0;
-        int infLoopThreshold = 100;
         foreach (var edge in edgesPositional)
         {
             curPos = edge.Item1;
@@ -54,42 +52,6 @@ public class PointToPointWalker : MonoBehaviour
                 curTile.transform.position = curPos;
                 corridorTiles.Add(curTile);
             }
-
-            //while ((((MathF.Abs(edge.Item2.x) - MathF.Abs(curPos.x)) > 0 && edge.Item1.x >=0) || ((MathF.Abs(edge.Item2.x) - MathF.Abs(curPos.x)) < 0 && edge.Item1.x < 0)) && infLoopCatcher < infLoopThreshold)
-            //{
-            //    infLoopCatcher++;
-            //    if (edge.Item1.x < edge.Item2.x)
-            //    {
-            //        curPos.x += UNIT;
-            //    }
-            //    else
-            //    {
-            //        curPos.x -= UNIT;
-            //    }
-            //    curTile = Instantiate(Tile);
-            //    curTile.transform.position = curPos;
-            //    corridorTiles.Add(curTile);
-            //}
-
-            //if (infLoopCatcher == infLoopThreshold) { Debug.LogError("INF LOOP CATCHER FOR POINT TO POINT WALKER'S X VALUE TRIPPED"); }
-            //infLoopCatcher = 0;
-
-            //while ((((MathF.Abs(edge.Item2.y) - MathF.Abs(curPos.y)) > 0 && edge.Item1.y >= 0) || ((MathF.Abs(edge.Item2.y) - MathF.Abs(curPos.y)) < 0 && edge.Item1.y < 0)) && infLoopCatcher < infLoopThreshold)
-            //{
-            //    infLoopCatcher++;
-            //    if (edge.Item1.y < edge.Item2.y)
-            //    {
-            //        curPos.y += UNIT;
-            //    }
-            //    else
-            //    {
-            //        curPos.y -= UNIT;
-            //    }
-            //    curTile = Instantiate(Tile);
-            //    curTile.transform.position = curPos;
-            //    corridorTiles.Add(curTile);
-            //}
-            //if (infLoopCatcher == infLoopThreshold) { Debug.LogError("INF LOOP CATCHER FOR POINT TO POINT WALKER'S Y VALUE TRIPPED"); }
         }
     }
     
@@ -126,7 +88,7 @@ public class PointToPointWalker : MonoBehaviour
         Debug.Log("Path list populated, beginning Walk...");
         Walk();
         Debug.Log("Walk Complete, Cleaning Up...");
-        //destroy tiles which intersect rooms
+        //destroy tiles which intersect rooms and oneanother
         Destroy(Tile);
     }
 }

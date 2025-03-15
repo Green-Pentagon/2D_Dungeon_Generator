@@ -1,9 +1,11 @@
 //TO DO:
 //- double check that the grid snapper is snapping to the correct unit size.
-//- Corridor functionality
+//  - DOES NOT WORK PROPERLY WITH ROOM CENTRES? Causes corridors of PointToPoint walker to be misaligned to grid
+
+//- (Proper) Corridor functionality
 //- wall-tile to corridor on corridor touch functionality
 //- clean up dead ends (configurable?)
-//- surround corridor tiles with walls functionality
+//- (if got the time) surround corridor tiles with walls functionality
 //- currently, rooms spawn at z depth 0, add parameter to allow to configure this?
 
 
@@ -215,7 +217,7 @@ public class Configure : MonoBehaviour
         MSTreeGenScript.Exec(ref rooms);
         MSTreeGenScript.debugDrawConnections(rooms);
 
-        PointToPointWalker.Exec(UNIT_SIZE,DebugWallTile, rooms,MSTreeGenScript.GetEdgeList());
+        PointToPointWalker.Exec(UNIT_SIZE,DebugFloorTile, rooms,MSTreeGenScript.GetEdgeList());
     }
 
     // Update is called once per frame
