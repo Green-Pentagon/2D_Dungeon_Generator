@@ -79,7 +79,10 @@ public class GenerateMSTree : MonoBehaviour
                     nodeQueue.Enqueue(adjID);
 
                     //Culls all other connected edges
-                    roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(roomGraph.LowestEdge(curNode));
+                    int LowestWeightID = roomGraph.LowestEdge(curNode);
+                    roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(LowestWeightID);
+                    roomGraph.GetNodeByID(LowestWeightID).RemoveEdge(curNode);
+                    
                     break;
                 }
 
