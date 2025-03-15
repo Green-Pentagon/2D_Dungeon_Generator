@@ -1,7 +1,12 @@
 //TO DO:
-//- TEST THAT THE DICTIONARY CHANGE WORKS, COPY PASTE INTO OLDER CODE IF NEED TO TEST IT, WEEK 9 OF DATASTRUCTURES WORK
-//- look into how to make an MS Tree
-//- current methodolgy won't work in connecting all the rooms together
+
+//-either implement kurkark greedy algorithm or:
+
+//1. find unconnected clusters
+//2. for every cluster, connect rooms with lowest weights per cluster.
+//3. join connected clusters & repeat until all united.
+//result might not be the most optimal and might not be a perfect MS tree but should suffice if implementing greedy algorithm fails.
+
 
 // - actually make the tree into an MS Tree (delunrey triangulation or whatever it was called)
 // - alternatively, you can convert the tree into an MS tree by:
