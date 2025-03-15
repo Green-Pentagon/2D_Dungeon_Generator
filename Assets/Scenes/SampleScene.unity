@@ -172,7 +172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221978649862484319, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: randomiseSeedOnStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2779663058150156086, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: m_RootOrder
@@ -216,6 +216,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2779663058150156086, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: seed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: maxRoomWidth
+      value: 41
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: spawnSpreadX
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: spawnSpreadY
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: maxRoomHeight
+      value: 42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: numberOfRooms
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: randomiseSeedOnStart
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5366122594793602101, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}

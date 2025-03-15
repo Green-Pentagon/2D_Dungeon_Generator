@@ -1,55 +1,52 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Room
+public class Room : IComparable
 {
+    private float UNIT;
+    private float width;
+    private float height;
     private GameObject roomObj;
     private int roomId;
+    private Vector2 roomCentre;
 
-    public Room(GameObject room)
+    public Room(GameObject room, float width, float height, float unit)
     {
         roomObj = room;
+        roomCentre = new Vector2(room.transform.position.x + (width/2.0f * unit),room.transform.position.y + (height / 2.0f * unit));
     }
 
-    //~Room()
+    //public Room(GameObject room, int id)
     //{
-        
+    //    roomId = id;
+    //    roomObj = room;
     //}
-
-    public Room(GameObject room, int id)
-    {
-        roomId = id;
-        roomObj = room;
-    }
 
     public void SetId(int newId)
     {
         roomId = newId;
     }
-    public int GetRoomId() { return roomId; }
+    public ref int GetRoomId() { return ref roomId; }
     public ref GameObject GetRoom() { return ref roomObj; }
+    public Vector2 GetRoomCentre() { return roomCentre; }
+
+    public ref float GetWidth() { return ref  width; }
+    public ref float GetHeight() { return ref  height; }
+
+    public int CompareTo(object other)
+    {
+        Room t = (Room)other;
+        return roomId.CompareTo(t.roomId);
+    }
 }
 
 
 public class GenerateRoom : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     public Room CreateRoom(Sprite FloorTile, Sprite WallTile, float unit, int width, int height,Vector2 offset)
     {
@@ -104,8 +101,8 @@ public class GenerateRoom : MonoBehaviour
             }
         }
 
-        Destroy(floorTile);
-        Destroy(wallTile);
+        DestroyImmediate(floorTile);
+        DestroyImmediate(wallTile);
 
         room.GetComponent<Transform>().position = offset * unit;
 
@@ -120,6 +117,6 @@ public class GenerateRoom : MonoBehaviour
         room.GetComponent<BoxCollider2D>().size = new Vector2(width * unit + (2f*unit), height * unit + (2f * unit));
         
 
-        return new Room(room);
+        return new Room(room,width,height,unit);
     }
 }
