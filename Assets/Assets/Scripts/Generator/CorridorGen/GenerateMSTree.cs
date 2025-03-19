@@ -105,8 +105,8 @@ public class GenerateMSTree : MonoBehaviour
             while (curNode != -1)
             {
                 roomGraph.GetNodeByID(curNode).RemoveAllEdgesExcluding(roomGraph.LowestEdge(curNode));
-                Debug.Log(curNode + " connects to " + roomGraph.GetNodeByID(curNode).AdjList.ElementAt(0) + " with a weight value " + roomGraph.GetNodeByID(curNode).WeightList.ElementAt(0));
-                Debug.Log(curNode + " contains " + roomGraph.GetNodeByID(curNode).AdjList.Count + " connections");
+                //Debug.Log(curNode + " connects to " + roomGraph.GetNodeByID(curNode).AdjList.ElementAt(0) + " with a weight value " + roomGraph.GetNodeByID(curNode).WeightList.ElementAt(0));
+                //Debug.Log(curNode + " contains " + roomGraph.GetNodeByID(curNode).AdjList.Count + " connections");
                 curNode--;
                 //curNode = prevIDs[curNode];
             }
@@ -195,7 +195,7 @@ public class GenerateMSTree : MonoBehaviour
         PopulateGraph(ref rooms);
         Debug.Log("Converting Graph into MS Tree...");
         ConvertIntoMSTree();
-        Debug.Log("Is every room reachable from roomID 0 = " + DebugIsEveryRoomReachable());
+        //Debug.Log("Is every room reachable from roomID 0 = " + DebugIsEveryRoomReachable());
         //Debug.Log("Adding % chance for loop in graph?"); // could also do this inside of the MS tree method with a probability chance governed by seed.
 
     }

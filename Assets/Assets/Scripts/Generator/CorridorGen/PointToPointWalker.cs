@@ -11,6 +11,7 @@ public class PointToPointWalker : MonoBehaviour
     List<Tuple<Vector2, Vector2>> edgesPositional = new List<Tuple<Vector2, Vector2>>();
     List<GameObject> corridorTiles = new List<GameObject>();
     GameObject Tile;
+    GameObject TileParent;
 
     void Walk()
     {
@@ -21,7 +22,7 @@ public class PointToPointWalker : MonoBehaviour
             curPos = edge.Item1;
             //infLoopCatcher = 0;
 
-            Debug.Log("Walking from " + edge.Item1.ToString() + " amount " + edge.Item2.ToString());
+            //Debug.Log("Walking from " + edge.Item1.ToString() + " amount " + edge.Item2.ToString());
 
             for (int i = 0; i < MathF.Abs(edge.Item2.x) / UNIT; i++)
             {
@@ -33,8 +34,10 @@ public class PointToPointWalker : MonoBehaviour
                 {
                     curPos.x -= UNIT;
                 }
+                
                 curTile = Instantiate(Tile);
                 curTile.transform.position = curPos;
+                curTile.transform.parent = TileParent.transform;
                 corridorTiles.Add(curTile);
             }
 
@@ -50,14 +53,18 @@ public class PointToPointWalker : MonoBehaviour
                 }
                 curTile = Instantiate(Tile);
                 curTile.transform.position = curPos;
+                curTile.transform.parent = TileParent.transform;
                 corridorTiles.Add(curTile);
             }
         }
     }
     
-    public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList)
+    public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
     {
         UNIT = unit;
+        TileParent = new GameObject();
+        TileParent.name = "Corridor Tiles";
+        TileParent.transform.parent = parentObject.transform;
 
         Tile = new GameObject();
         Tile.name = "Corridor";

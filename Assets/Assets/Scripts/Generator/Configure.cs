@@ -27,6 +27,7 @@ public class Configure : MonoBehaviour
     public int ATTEMPTS_ALLOWED = 300;
 
     //IF YOU CHANGE THESE VALUES, ALSO CHANGE THE VALUES OFR THE PUBLIC VARIABLES BELOW ACCORDINGLY.
+    private GameObject DungeonParentObj;
     private GenerateRoom RoomGenScript;
     private SnapToGrid SnapToGrid;
     private GenerateMSTree MSTreeGenScript;
@@ -148,6 +149,7 @@ public class Configure : MonoBehaviour
             if (!IsClipping(ref tempRoom.GetRoom()))
             {
                 tempRoom.SetId(rooms.Count);
+                tempRoom.GetRoom().transform.parent = DungeonParentObj.transform;
                 rooms.Add(tempRoom);
             }
             else
@@ -210,14 +212,17 @@ public class Configure : MonoBehaviour
         print("--DUNGEON GENERATOR SCRIPT START--\nSeed: " + seed);
         print("confined to area: (" + ConfinesCornerTopLeft.x + ", " + ConfinesCornerTopLeft.y + ") to (" + ConfinesCornerBottomRight.x + ", " + ConfinesCornerBottomRight.y + ").");
 
+        DungeonParentObj = new GameObject();
+        DungeonParentObj.name = "Dungeon (seed: " + seed + ")";
+
         GenerateRooms();
 
         SnapToGrid.Run(rooms, UNIT_SIZE);
         EnableWallTileColliders(rooms);
         MSTreeGenScript.Exec(ref rooms);
-        MSTreeGenScript.debugDrawConnections(rooms);
+        //MSTreeGenScript.debugDrawConnections(rooms);
 
-        PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile, rooms, MSTreeGenScript.GetEdgeList());
+        PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile, rooms, MSTreeGenScript.GetEdgeList(),ref DungeonParentObj);
     }
 
 
