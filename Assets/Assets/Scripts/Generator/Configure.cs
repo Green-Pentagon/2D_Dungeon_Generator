@@ -18,7 +18,8 @@ public class Configure : MonoBehaviour
 {
     //Class attributes
     //----------------------------------
-    public float UNIT_SIZE = 1.0f;
+    //public float UnitSize = 1.0f;
+    private float UNIT_SIZE = 1.0f;
     public Sprite DebugFloorTile;
     public Sprite DebugWallTile;
 
@@ -84,6 +85,7 @@ public class Configure : MonoBehaviour
     [ExecuteInEditMode]
     void OnValidate()
     {
+        //UNIT_SIZE = UnitSize;
         if (minRoomWidth > maxRoomWidth && maxRoomWidth != roomWidthRange[1])
         {
             maxRoomWidth = minRoomWidth;
@@ -201,10 +203,14 @@ public class Configure : MonoBehaviour
 
     public void Exec()
     {
+        OnValidate();
         RoomGenScript = GetComponentInParent<GenerateRoom>();
         SnapToGrid = GetComponentInParent<SnapToGrid>();
         MSTreeGenScript = GetComponentInParent<GenerateMSTree>();
         PointToPointWalker = GetComponentInParent<PointToPointWalker>();
+
+        long timeStart = System.DateTime.Now.Ticks;
+        System.TimeSpan deltaTimeExec;
 
         SetConfines();
         SetSeed();
@@ -223,6 +229,9 @@ public class Configure : MonoBehaviour
         //MSTreeGenScript.debugDrawConnections(rooms);
 
         PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile, rooms, MSTreeGenScript.GetEdgeList(),ref DungeonParentObj);
+        deltaTimeExec = new System.TimeSpan(System.DateTime.Now.Ticks - timeStart);
+        
+        print("--DUNGEON GENERATOR SCRIPT FINISHED (" + deltaTimeExec.TotalSeconds + " seconds)--");
     }
 
 
