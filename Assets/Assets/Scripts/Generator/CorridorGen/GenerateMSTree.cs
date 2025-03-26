@@ -27,6 +27,7 @@ public class GenerateMSTree : MonoBehaviour
 {
     // Start is called before the first frame update
     GraphWeighted<int> roomGraph;
+    GraphWeighted<int> NodeToNodeWeights;
     const int START_ID = 0;
     int END_ID;
     
@@ -35,6 +36,7 @@ public class GenerateMSTree : MonoBehaviour
         foreach (Room room in rooms)
         {
             roomGraph.AddNode(room.GetRoomId());
+            NodeToNodeWeights.AddNode(room.GetRoomId());
         }
 
         foreach (Room room in rooms)
@@ -45,10 +47,113 @@ public class GenerateMSTree : MonoBehaviour
                 if (room.GetRoomId() != room2.GetRoomId())
                 {
                     roomGraph.AddEdge(room.GetRoomId(), room2.GetRoomId(), MathF.Abs((room.GetRoomCentre() - room2.GetRoomCentre()).magnitude));
+                    NodeToNodeWeights.AddEdge(room.GetRoomId(), room2.GetRoomId(), MathF.Abs((room.GetRoomCentre() - room2.GetRoomCentre()).magnitude));
                 }
             }
 
         }
+    }
+
+    void JoinFragmentedGraph()
+    {
+        int numNodes = roomGraph.NumNodes();
+        List<Tuple<int,int,float>> edgeList = roomGraph.GetEdges();
+        bool[] visited = new bool[numNodes];
+        List<List<int>> clusters = new List<List<int>>();
+
+        //creates and populates adj list for search.
+        List<int>[] adjList = new List<int>[numNodes];
+        for (int i = 0; i < numNodes; i++)
+        {
+            adjList[i] = new List<int>();
+        }
+        foreach (var e in edgeList)
+        {
+            int v0 = e.Item1;
+            int v1 = e.Item2;
+            adjList[v0].Add(v1);
+            adjList[v1].Add(v0);
+        }
+
+        //initialise the variables for search
+        Stack<int> nodeStack = new Stack<int>();
+        List<int> CurrentCluster;
+        int largestCluster = 0;
+        int curNode;
+        int nodeCount = 0;
+
+        //while not every node has been checked
+        while (nodeCount < visited.Length)
+        {
+            int temp = 0;
+            //Find the next non-visited node
+            while (visited[temp])
+            {
+                temp++;
+            }
+            //reset the current friend group & push the first person to check onto the stack.
+            CurrentCluster = new List<int>();
+            nodeStack.Push(temp);
+            visited[temp] = true;
+
+            //while stack isn't empty, commence Deph-First search
+            while (nodeStack.Count > 0)
+            {
+                //node counter goes up every time a node is visited
+                //unless a node connects to itself, no duplicate node should end up in the CurrentFriendGroup, an exception is thrown if so.
+                curNode = nodeStack.Pop();
+                nodeCount++;
+                CurrentCluster.Add(curNode);
+                //for every connection in the Adjacency list
+                foreach (var vert in adjList[curNode])
+                {
+                    //if a node wasn't visited, add it to the stack to visit & set it as visited
+                    if (!visited[vert])
+                    {
+                        visited[vert] = true;
+                        nodeStack.Push(vert);
+                    }
+                }
+            }
+
+            //if the resulting cluster of connected nodes has more members than the currently recorded highest count, replace it.
+            if (CurrentCluster.Count > largestCluster)
+            {
+                largestCluster = CurrentCluster.Count;
+            }
+
+            clusters.Add(CurrentCluster);
+        }
+
+
+        //connects clusters by lowest possible weight values, not checking for which cluster is closest to one another.
+
+        Dictionary<int,float> cDict = new Dictionary<int,float>();
+
+        float lowestWeightConnection;
+        Tuple<int, int> lowestConnection;
+
+        for (int i = 1; i < clusters.Count; i++)
+        {
+            lowestWeightConnection = float.MaxValue;
+            lowestConnection = new Tuple<int, int>(-1,-1);
+
+            foreach (int id1 in clusters[i])
+            {
+                cDict = NodeToNodeWeights.GetNodeByID(id1).WeightMap;
+
+                foreach (int id2 in clusters[i - 1])
+                {
+                    if (lowestWeightConnection > NodeToNodeWeights.GetNodeByID(id1).WeightMap[id2])
+                    {
+                        lowestWeightConnection = NodeToNodeWeights.GetNodeByID(id1).WeightMap[id2];
+                        lowestConnection = new Tuple<int,int>(id1, id2);
+                    }
+                }
+            }
+            roomGraph.AddEdge(lowestConnection.Item1, lowestConnection.Item2,lowestWeightConnection);
+        }
+
     }
 
     void ConvertIntoMSTree() {
@@ -118,54 +223,54 @@ public class GenerateMSTree : MonoBehaviour
     
     bool DebugIsEveryRoomReachable()
     {
-        bool output = true;
-        int counter = 1;
+        //bool output = true;
+        //int counter = 1;
 
 
-            //initialise the variables for search
-            Stack<int> nodeStack = new Stack<int>();
-            int curNode;
+        //    //initialise the variables for search
+        //    Stack<int> nodeStack = new Stack<int>();
+        //    int curNode;
 
-            HashSet<int> Visited = new HashSet<int>();
-            Visited.Add(START_ID);
-            int[] prevIDs = new int[END_ID + 1]; // build path from refs to previous
-            prevIDs[START_ID] = -1; //mark the start for the crawl back to find the depth
-                                    //int degreeSeperation = -1;
+        //    HashSet<int> Visited = new HashSet<int>();
+        //    Visited.Add(START_ID);
+        //    int[] prevIDs = new int[END_ID + 1]; // build path from refs to previous
+        //    prevIDs[START_ID] = -1; //mark the start for the crawl back to find the depth
+        //                            //int degreeSeperation = -1;
 
-            nodeStack.Push(START_ID);
+        //    nodeStack.Push(START_ID);
 
-            //start Breadth-first search
-            while (nodeStack.Count > 0)
-            {
-                curNode = nodeStack.Pop();
+        //    //start Breadth-first search
+        //    while (nodeStack.Count > 0)
+        //    {
+        //        curNode = nodeStack.Pop();
                 
-                //if found end, break out of process
+        //        //if found end, break out of process
                 
 
-                //for each adjList connection, queue any unvisited nodes to visit
-                foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
-                {
-                    if (!roomGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
-                    {
-                        //Console.WriteLine("pushing " + adjID);
-                        counter++;
-                        roomGraph.GetNodeByID(adjID).SetVisited(true);
-                        //nodesVisited[adjID] = true;
-                        prevIDs[adjID] = curNode;
-                        Visited.Add(adjID);
-                        nodeStack.Push(adjID);
-                    }
-                }
-            }
+        //        //for each adjList connection, queue any unvisited nodes to visit
+        //        foreach (int adjID in roomGraph.GetNodeByID(curNode).AdjList)
+        //        {
+        //            if (!roomGraph.GetNodeByID(adjID).GetVisited() && !Visited.Contains(adjID))
+        //            {
+        //                //Console.WriteLine("pushing " + adjID);
+        //                counter++;
+        //                roomGraph.GetNodeByID(adjID).SetVisited(true);
+        //                //nodesVisited[adjID] = true;
+        //                prevIDs[adjID] = curNode;
+        //                Visited.Add(adjID);
+        //                nodeStack.Push(adjID);
+        //            }
+        //        }
+        //    }
 
-            if (counter == roomGraph.NumNodes())
-            {
-                return false;
-            }
+        //    if (counter == roomGraph.NumNodes())
+        //    {
+        //        return false;
+        //    }
         
         
 
-        return output;
+        return false;
     }
 
 
@@ -190,11 +295,13 @@ public class GenerateMSTree : MonoBehaviour
     public void Exec(ref List<Room> rooms)
     {
         roomGraph = new GraphWeighted<int>();
+        NodeToNodeWeights = new GraphWeighted<int>();
         END_ID = rooms.Count - 1;
         Debug.Log("Generating a full graph...");
         PopulateGraph(ref rooms);
         Debug.Log("Converting Graph into MS Tree...");
         ConvertIntoMSTree();
+        JoinFragmentedGraph();
         //Debug.Log("Is every room reachable from roomID 0 = " + DebugIsEveryRoomReachable());
         //Debug.Log("Adding % chance for loop in graph?"); // could also do this inside of the MS tree method with a probability chance governed by seed.
 
