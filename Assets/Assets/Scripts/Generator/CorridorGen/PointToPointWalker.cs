@@ -8,8 +8,8 @@ using UnityEngine;
 public class PointToPointWalker : MonoBehaviour
 {
     float UNIT;
-    List<Tuple<Vector2, Vector2>> edgesPositional = new List<Tuple<Vector2, Vector2>>();
-    List<GameObject> corridorTiles = new List<GameObject>();
+    List<Tuple<Vector2, Vector2>> edgesPositional;
+    List<GameObject> corridorTiles;
     GameObject Tile;
     GameObject TileParent;
 
@@ -61,6 +61,8 @@ public class PointToPointWalker : MonoBehaviour
     
     public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
     {
+        edgesPositional = new List<Tuple<Vector2, Vector2>>();
+        corridorTiles = new List<GameObject>();
         UNIT = unit;
         TileParent = new GameObject();
         TileParent.name = "Corridor Tiles";

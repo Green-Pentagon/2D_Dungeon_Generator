@@ -18,8 +18,8 @@ public class Configure : MonoBehaviour
 {
     //Class attributes
     //----------------------------------
-    //public float UnitSize = 1.0f;
-    private float UNIT_SIZE = 1.0f;
+    public float UnitSize = 1.0f;
+    private float UNIT_SIZE;
     public Sprite DebugFloorTile;
     public Sprite DebugWallTile;
 
@@ -85,7 +85,7 @@ public class Configure : MonoBehaviour
     [ExecuteInEditMode]
     void OnValidate()
     {
-        //UNIT_SIZE = UnitSize;
+        UNIT_SIZE = UnitSize;
         if (minRoomWidth > maxRoomWidth && maxRoomWidth != roomWidthRange[1])
         {
             maxRoomWidth = minRoomWidth;
