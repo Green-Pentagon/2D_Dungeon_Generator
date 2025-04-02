@@ -283,7 +283,7 @@ public class GenerateMSTree : MonoBehaviour
         for (int cID = 0; cID < roomGraph.NumNodes(); cID++)
         {
             nID = roomGraph.GetNodeByID(cID).AdjList.ElementAt(0);
-            Debug.DrawLine(rooms.ElementAt(cID).GetRoomCentre(), rooms.ElementAt(nID).GetRoomCentre(), Color.red, 900.0f);
+            Debug.DrawLine(rooms.ElementAt(cID).GetRoomCentre(), rooms.ElementAt(nID).GetRoomCentre(), Color.red, 10.0f);
         }
     }
 
