@@ -18,6 +18,16 @@ public class Room : IComparable
     {
         roomObj = room;
         roomCentre = new Vector2(room.transform.position.x + (width/2.0f * unit),room.transform.position.y + (height / 2.0f * unit));
+        if (roomCentre.x % unit != 0)
+        {
+            int temp = (int)(roomCentre.x / unit);
+            roomCentre.x = temp*unit;
+        }
+        if (roomCentre.y % unit != 0)
+        {
+            int temp = (int)(roomCentre.y / unit);
+            roomCentre.y = temp*unit;
+        }
     }
 
     //public Room(GameObject room, int id)
