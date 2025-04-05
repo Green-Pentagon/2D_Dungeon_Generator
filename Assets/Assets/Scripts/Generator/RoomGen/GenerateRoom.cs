@@ -72,8 +72,8 @@ public class Room : IComparable
         // (roomCentre.y + (roomExtends.y * UNIT)) >= position.y
         // (roomCentre.y - (roomExtends.y * UNIT)) <= position.y
 
-        if ((roomCentre.x + (roomExtends.x * UNIT)) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
-        (roomCentre.y + (roomExtends.y * UNIT)) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
+        if ((roomCentre.x + (roomExtends.x * UNIT)- UNIT) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
+        (roomCentre.y + (roomExtends.y * UNIT) - UNIT) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
         {
             return true;
         }

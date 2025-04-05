@@ -146,6 +146,8 @@ public class Configure : MonoBehaviour
             rndWidth = Random.Range(minRoomWidth, maxRoomWidth + 1);
             rndHeight = Random.Range(minRoomHeight, maxRoomHeight + 1);
             rndOffset = new Vector2(Random.Range(-spawnSpreadX, spawnSpreadX), Random.Range(-spawnSpreadY, spawnSpreadY));
+            
+
             tempRoom = RoomGenScript.CreateRoom(DebugFloorTile, DebugWallTile, UNIT_SIZE, rndWidth, rndHeight, rndOffset);
 
             if (!IsClipping(ref tempRoom.GetRoom()))

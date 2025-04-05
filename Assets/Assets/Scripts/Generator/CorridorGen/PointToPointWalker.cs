@@ -19,7 +19,7 @@ public class PointToPointWalker : MonoBehaviour
         {
             if (room.Overlapping(curPos))
             {
-                Debug.LogWarning("room (ID:" + room.GetRoomId()+ ") ("+ room.GetWidth() +" x " + room.GetHeight() +") overlap detected on" + curPos);
+                //Debug.LogWarning("room (ID:" + room.GetRoomId()+ ") ("+ room.GetWidth() +" x " + room.GetHeight() +") overlap detected on" + curPos);
                 return false;
             }
         }
