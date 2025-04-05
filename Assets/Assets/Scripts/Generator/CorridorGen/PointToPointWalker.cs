@@ -13,13 +13,23 @@ public class PointToPointWalker : MonoBehaviour
     GameObject Tile;
     GameObject TileParent;
 
-    bool IsValidPlacement(ref Vector2 _curPos)
+    bool IsValidPlacement(ref Vector2 curPos, ref List<Room> rooms)
     {
+        foreach (Room room in rooms)
+        {
+            if (room.Overlapping(curPos))
+            {
+                Debug.LogWarning("room (ID:" + room.GetRoomId()+ ") ("+ room.GetWidth() +" x " + room.GetHeight() +") overlap detected on" + curPos);
+                return false;
+            }
+        }
+
+        
         //check for pre-existing corridor tiles in this position
         //this is done in O(n), but could be reduced to approx. O(log n) via binary search.
         foreach (GameObject tile in corridorTiles)
         {
-            if (_curPos == (Vector2)tile.transform.position)
+            if (curPos == (Vector2)tile.transform.position)
             {
                 return false;
             }
@@ -30,7 +40,7 @@ public class PointToPointWalker : MonoBehaviour
     }
 
 
-    void Walk()
+    void Walk(ref List<Room> rooms)
     {
         Vector2 curPos;
         GameObject curTile;
@@ -52,7 +62,7 @@ public class PointToPointWalker : MonoBehaviour
                     curPos.x -= UNIT;
                 }
 
-                if (IsValidPlacement(ref curPos))
+                if (IsValidPlacement(ref curPos, ref rooms))
                 {
                     curTile = Instantiate(Tile);
                     curTile.transform.position = curPos;
@@ -72,7 +82,7 @@ public class PointToPointWalker : MonoBehaviour
                     curPos.y -= UNIT;
                 }
 
-                if (IsValidPlacement(ref curPos))
+                if (IsValidPlacement(ref curPos, ref rooms))
                 {
                     curTile = Instantiate(Tile);
                     curTile.transform.position = curPos;
@@ -106,7 +116,7 @@ public class PointToPointWalker : MonoBehaviour
             //edgesPositional.Add(new Tuple<int, int, Vector2>(edge.Item1, edge.Item2, rooms.ElementAt(edge.Item1).GetRoomCentre() + rooms.ElementAt(edge.Item2).GetRoomCentre()));
         }
         Debug.Log("Path list populated, beginning Walk...");
-        Walk();
+        Walk(ref rooms);
         Debug.Log("Walk Complete, Cleaning Up...");
         //DestroyImmediate tiles which intersect rooms and oneanother
         DestroyImmediate(Tile);

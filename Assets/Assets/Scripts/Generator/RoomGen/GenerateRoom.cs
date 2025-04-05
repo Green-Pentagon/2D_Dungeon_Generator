@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class Room : IComparable
 {
@@ -13,21 +14,29 @@ public class Room : IComparable
     private GameObject roomObj;
     private int roomId;
     private Vector2 roomCentre;
+    private Vector2 roomExtends;
 
-    public Room(GameObject room, float width, float height, float unit)
+    public Room(GameObject room, float _width, float _height, float unit)
     {
+        UNIT = unit;
         roomObj = room;
-        roomCentre = new Vector2(room.transform.position.x + (width/2.0f * unit),room.transform.position.y + (height / 2.0f * unit));
-        if (roomCentre.x % unit != 0)
+
+        width = (int)((_width * UNIT) / UNIT);
+        height = (int)((_height * UNIT) / UNIT);
+
+        roomCentre = new Vector2(room.transform.position.x + (width/2.0f * UNIT),room.transform.position.y + (height / 2.0f * UNIT));
+        roomExtends = new Vector2(width/2.0f , height/2.0f).Abs();
+        if (roomCentre.x % UNIT != 0)
         {
-            int temp = (int)(roomCentre.x / unit);
-            roomCentre.x = temp*unit;
+            int temp = (int)(roomCentre.x / UNIT);
+            roomCentre.x = temp*UNIT;
         }
-        if (roomCentre.y % unit != 0)
+        if (roomCentre.y % UNIT != 0)
         {
-            int temp = (int)(roomCentre.y / unit);
-            roomCentre.y = temp*unit;
+            int temp = (int)(roomCentre.y / UNIT);
+            roomCentre.y = temp*UNIT;
         }
+       
     }
 
     //public Room(GameObject room, int id)
@@ -39,6 +48,7 @@ public class Room : IComparable
     public void SetId(int newId)
     {
         roomId = newId;
+        roomObj.name += " " + newId;
     }
     public ref int GetRoomId() { return ref roomId; }
     public ref GameObject GetRoom() { return ref roomObj; }
@@ -46,6 +56,32 @@ public class Room : IComparable
 
     public ref float GetWidth() { return ref  width; }
     public ref float GetHeight() { return ref  height; }
+
+    public void ConvertWallToFloorTile(Vector2 position)
+    {
+        //check every wall if it matches the coordinates, if it does:
+        //- remove its collision
+        //- grab a copy of a sprite from existing floor tile & change its sprite to it
+    }
+    
+    public bool Overlapping(Vector2 position)
+    {
+
+        // (roomCentre.x + (roomExtends.x * UNIT)) >= position.x
+        // (roomCentre.x - (roomExtends.x * UNIT)) <= position.x
+        // (roomCentre.y + (roomExtends.y * UNIT)) >= position.y
+        // (roomCentre.y - (roomExtends.y * UNIT)) <= position.y
+
+        if ((roomCentre.x + (roomExtends.x * UNIT)) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
+        (roomCentre.y + (roomExtends.y * UNIT)) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
+        {
+            return true;
+        }
+
+
+
+        return false;
+    }
 
     public int CompareTo(object other)
     {
