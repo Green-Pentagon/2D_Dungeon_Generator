@@ -17,6 +17,11 @@ public class PointToPointWalker : MonoBehaviour
     {
         foreach (Room room in rooms)
         {
+            if (room.ConvertWallToFloorTile(curPos))
+            {
+                return false;
+            }
+
             if (room.Overlapping(curPos))
             {
                 //Debug.LogWarning("room (ID:" + room.GetRoomId()+ ") ("+ room.GetWidth() +" x " + room.GetHeight() +") overlap detected on" + curPos);
@@ -47,8 +52,6 @@ public class PointToPointWalker : MonoBehaviour
         foreach (var edge in edgesPositional)
         {
             curPos = edge.Item1;
-            //infLoopCatcher = 0;
-
             //Debug.Log("Walking from " + edge.Item1.ToString() + " amount " + edge.Item2.ToString());
 
             for (int i = 0; i < MathF.Abs(edge.Item2.x) / UNIT; i++)

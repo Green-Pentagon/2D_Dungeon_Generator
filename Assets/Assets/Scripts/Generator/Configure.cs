@@ -181,9 +181,9 @@ public class Configure : MonoBehaviour
             //DestroyImmediate(room.GetComponent<Rigidbody2D>());
 
             //re-enables wall tile collisions.
-            for (int i = 0; i < room.GetRoom().transform.childCount; i++)
+            for (int i = 0; i < room.GetRoom().transform.GetChild(0).childCount; i++)
             {
-                if (room.GetRoom().transform.GetChild(i).TryGetComponent<BoxCollider2D>(out BoxCollider2D coll))
+                if (room.GetRoom().transform.GetChild(0).GetChild(i).TryGetComponent<BoxCollider2D>(out BoxCollider2D coll))
                 {
                     //if a tile has a box collider, enable it
                     coll.enabled = true;

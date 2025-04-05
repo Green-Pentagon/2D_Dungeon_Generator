@@ -57,8 +57,28 @@ public class Room : IComparable
     public ref float GetWidth() { return ref  width; }
     public ref float GetHeight() { return ref  height; }
 
-    public void ConvertWallToFloorTile(Vector2 position)
+    public bool ConvertWallToFloorTile(Vector2 position)
     {
+
+
+        if (Overlapping(position))
+        {
+            //for each wall object stored, see if its position matches
+            for (int wallIndex = 0; wallIndex < roomObj.transform.GetChild(0).childCount;wallIndex++)
+            {
+                if (roomObj.transform.GetChild(0).GetChild(wallIndex).transform.position.x == position.x && roomObj.transform.GetChild(0).GetChild(wallIndex).transform.position.y == position.y)
+                {
+                    //convert wall into floor
+                    roomObj.transform.GetChild(0).GetChild(wallIndex).GetComponent<SpriteRenderer>().sprite = roomObj.transform.GetChild(1).GetChild(0).GetComponent<SpriteRenderer>().sprite;
+                    roomObj.transform.GetChild(0).GetChild(wallIndex).GetComponent<BoxCollider2D>().enabled = false;
+                    //Debug.LogWarning(roomId + ": wall to floor convertion needed");
+                    return true;
+                    
+                }
+            }
+        }
+        return false;
+
         //check every wall if it matches the coordinates, if it does:
         //- remove its collision
         //- grab a copy of a sprite from existing floor tile & change its sprite to it
@@ -100,6 +120,15 @@ public class GenerateRoom : MonoBehaviour
         room.name = "Room";
         Vector2 tileBounds = FloorTile.bounds.size;
 
+        GameObject wallsParent = new GameObject();
+        GameObject floorsParent = new GameObject();
+        wallsParent.name = "Walls";
+        floorsParent.name = "Floors";
+        wallsParent.GetComponent<Transform>().parent = room.GetComponent<Transform>();
+        floorsParent.GetComponent<Transform>().parent = room.GetComponent<Transform>();
+
+
+
 
         //creating template floor tile
         GameObject floorTile = new GameObject();
@@ -132,7 +161,7 @@ public class GenerateRoom : MonoBehaviour
                     //create wall tile
                     tempTile = Instantiate(wallTile);
                     tempTile.GetComponent<Transform>().position = new Vector3((x * unit), (y * unit), 0.0f);
-                    tempTile.GetComponent<Transform>().parent = room.GetComponent<Transform>();
+                    tempTile.GetComponent<Transform>().parent = wallsParent.GetComponent<Transform>();
                     tempTile = null;//check if this clears it
                 }
                 else
@@ -140,7 +169,7 @@ public class GenerateRoom : MonoBehaviour
                     //create floor tile
                     tempTile = Instantiate(floorTile);
                     tempTile.GetComponent<Transform>().position = new Vector3((x * unit), (y * unit), 0.0f);
-                    tempTile.GetComponent<Transform>().parent = room.GetComponent<Transform>();
+                    tempTile.GetComponent<Transform>().parent = floorsParent.GetComponent<Transform>();
                     tempTile = null;//check if this clears it
                 }
                 
