@@ -13,6 +13,23 @@ public class PointToPointWalker : MonoBehaviour
     GameObject Tile;
     GameObject TileParent;
 
+    bool IsValidPlacement(ref Vector2 _curPos)
+    {
+        //check for pre-existing corridor tiles in this position
+        //this is done in O(n), but could be reduced to approx. O(log n) via binary search.
+        foreach (GameObject tile in corridorTiles)
+        {
+            if (_curPos == (Vector2)tile.transform.position)
+            {
+                return false;
+            }
+        }
+
+        return true;
+        
+    }
+
+
     void Walk()
     {
         Vector2 curPos;
@@ -34,11 +51,14 @@ public class PointToPointWalker : MonoBehaviour
                 {
                     curPos.x -= UNIT;
                 }
-                
-                curTile = Instantiate(Tile);
-                curTile.transform.position = curPos;
-                curTile.transform.parent = TileParent.transform;
-                corridorTiles.Add(curTile);
+
+                if (IsValidPlacement(ref curPos))
+                {
+                    curTile = Instantiate(Tile);
+                    curTile.transform.position = curPos;
+                    curTile.transform.parent = TileParent.transform;
+                    corridorTiles.Add(curTile);
+                }
             }
 
             for (int i = 0; i < MathF.Abs(edge.Item2.y) / UNIT; i++)
@@ -51,10 +71,14 @@ public class PointToPointWalker : MonoBehaviour
                 {
                     curPos.y -= UNIT;
                 }
-                curTile = Instantiate(Tile);
-                curTile.transform.position = curPos;
-                curTile.transform.parent = TileParent.transform;
-                corridorTiles.Add(curTile);
+
+                if (IsValidPlacement(ref curPos))
+                {
+                    curTile = Instantiate(Tile);
+                    curTile.transform.position = curPos;
+                    curTile.transform.parent = TileParent.transform;
+                    corridorTiles.Add(curTile);
+                }
             }
         }
     }
