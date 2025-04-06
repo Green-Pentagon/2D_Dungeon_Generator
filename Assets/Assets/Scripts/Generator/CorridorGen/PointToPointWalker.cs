@@ -101,12 +101,15 @@ public class PointToPointWalker : MonoBehaviour
     
     void GenerateWalls(ref List<Room> rooms)
     {
+        //checks the neighbouring 8 tiles (moore neighbourhood) surrounding a corridor tile to determine if a wall can be placed there
+        
+
         GameObject curTile;
         Vector2 curPos;
         Vector2 offset = new Vector2(UNIT, UNIT);
 
         //XY
-        //AB,AC, BA, BB, BC, CA, CB, CC
+        //AB,AC, BA, BB, BC, CA, CB, CC (AA is redundant since it is the tile's position)
         //A = 0
         //B = 1
         //C = -1
@@ -143,6 +146,7 @@ public class PointToPointWalker : MonoBehaviour
                         break;
                 }
 
+                //add the offset to the current position
                 tempPos = curPos + tempPos;
 
                 if (IsValidPlacement(ref tempPos, ref rooms))
@@ -154,18 +158,10 @@ public class PointToPointWalker : MonoBehaviour
                 }
 
             }
-
-            //if (IsValidPlacement(ref curPos, ref rooms))
-            //{
-            //    //curTile = Instantiate(CorridorTile);
-            //    //curTile.transform.position = curPos;
-            //    //curTile.transform.parent = CorridorTileParent.transform;
-            //    //corridorTiles.Add(curTile);
-            //}
         }
     }
 
-    public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
+    public void Exec(float unit,Sprite corridorTile,Sprite wallTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
     {
         edgesPositional = new List<Tuple<Vector2, Vector2>>();
         corridorTiles = new List<GameObject>();
@@ -208,7 +204,7 @@ public class PointToPointWalker : MonoBehaviour
         WallTile = new GameObject();
         WallTile.name = "Wall";
         WallTile.AddComponent<SpriteRenderer>();
-        WallTile.GetComponent<SpriteRenderer>().sprite = corridorTile;
+        WallTile.GetComponent<SpriteRenderer>().sprite = wallTile;
         WallTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
 
         Debug.Log("Corridors generated, adding surrounding walls...");

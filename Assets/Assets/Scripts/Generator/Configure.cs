@@ -219,7 +219,7 @@ public class Configure : MonoBehaviour
         MSTreeGenScript.Exec(ref rooms);
         //MSTreeGenScript.debugDrawConnections(rooms);
 
-        PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile, rooms, MSTreeGenScript.GetEdgeList(),ref DungeonParentObj);
+        PointToPointWalker.Exec(UNIT_SIZE, DebugFloorTile,DebugWallTile, rooms, MSTreeGenScript.GetEdgeList(),ref DungeonParentObj);
         deltaTimeExec = new System.TimeSpan(System.DateTime.Now.Ticks - timeStart);
         
         print("--DUNGEON GENERATOR SCRIPT FINISHED (" + deltaTimeExec.TotalSeconds + " seconds)--");
