@@ -13,8 +13,8 @@ public class Room : IComparable
     private float height;
     private GameObject roomObj;
     private int roomId;
+    private Vector2 roomAnchor;
     private Vector2 roomCentre;
-    private Vector2 roomExtends;
 
     public Room(GameObject room, float _width, float _height, float unit)
     {
@@ -24,8 +24,9 @@ public class Room : IComparable
         width = (int)((_width * UNIT) / UNIT);
         height = (int)((_height * UNIT) / UNIT);
 
+        roomAnchor = room.transform.position;
         roomCentre = new Vector2(room.transform.position.x + (width/2.0f * UNIT),room.transform.position.y + (height / 2.0f * UNIT));
-        roomExtends = new Vector2(width/2.0f , height/2.0f).Abs();
+
         if (roomCentre.x % UNIT != 0)
         {
             int temp = (int)(roomCentre.x / UNIT);
@@ -53,6 +54,8 @@ public class Room : IComparable
     public ref int GetRoomId() { return ref roomId; }
     public ref GameObject GetRoom() { return ref roomObj; }
     public Vector2 GetRoomCentre() { return roomCentre; }
+
+    public Vector3 GetRoomPosition() { return roomAnchor; }
 
     public ref float GetWidth() { return ref  width; }
     public ref float GetHeight() { return ref  height; }
@@ -86,19 +89,12 @@ public class Room : IComparable
     
     public bool Overlapping(Vector2 position)
     {
-
-        // (roomCentre.x + (roomExtends.x * UNIT)) >= position.x
-        // (roomCentre.x - (roomExtends.x * UNIT)) <= position.x
-        // (roomCentre.y + (roomExtends.y * UNIT)) >= position.y
-        // (roomCentre.y - (roomExtends.y * UNIT)) <= position.y
-
-        if ((roomCentre.x + (roomExtends.x * UNIT)- UNIT) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
-        (roomCentre.y + (roomExtends.y * UNIT) - UNIT) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
+        //using the centre of the room causes important loss of information
+        if ((roomAnchor.x + ((width-1) * UNIT)) >= position.x && (roomAnchor.x) <= position.x &&
+            (roomAnchor.y + ((height-1) * UNIT)) >= position.y && (roomAnchor.y) <= position.y)
         {
             return true;
         }
-
-
 
         return false;
     }
