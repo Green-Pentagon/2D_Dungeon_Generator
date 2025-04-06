@@ -1,14 +1,3 @@
-//TO DO:
-//- double check that the grid snapper is snapping to the correct unit size.
-//  - DOES NOT WORK PROPERLY WITH ROOM CENTRES? Causes corridors of PointToPoint walker to be misaligned to grid
-
-//- (Proper) Corridor functionality
-//- wall-tile to corridor on corridor touch functionality
-//- clean up dead ends (configurable?)
-//- (if got the time) surround corridor tiles with walls functionality
-//- currently, rooms spawn at z depth 0, add parameter to allow to configure this?
-
-
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;

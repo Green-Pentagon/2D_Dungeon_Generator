@@ -1,20 +1,3 @@
-//TO DO:
-
-//-either implement kurkark greedy algorithm or:
-
-//1. find unconnected clusters
-//2. for every cluster, connect rooms with lowest weights per cluster.
-//3. join connected clusters & repeat until all united.
-//result might not be the most optimal and might not be a perfect MS tree but should suffice if implementing greedy algorithm fails.
-
-
-// - actually make the tree into an MS Tree (delunrey triangulation or whatever it was called)
-// - alternatively, you can convert the tree into an MS tree by:
-//      - Checking that all outgoing connections from every room ID is 1
-//      - If not, remove the larger weighted connection
-//      - go through the tree again and connect any isolated clusters & unite them into a single tree (tougher than it sounds)
-// - Could further literacy review by re-adapting potential discovered methods of making an MS Tree in the future.
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
