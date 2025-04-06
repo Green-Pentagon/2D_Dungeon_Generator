@@ -139,10 +139,10 @@ public class PointToPointWalker : MonoBehaviour
                 switch (checkingOrder[i])
                 {
                     case 'B':
-                        tempPos = tempPos * Vector2.up * offset;
+                        tempPos = tempPos + (Vector2.up * offset);
                         break;
                     case 'C':
-                        tempPos = tempPos * Vector2.down * offset;
+                        tempPos = tempPos + (Vector2.down * offset);
                         break;
                 }
 
