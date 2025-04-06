@@ -11,6 +11,7 @@ public class PointToPointWalker : MonoBehaviour
     List<Tuple<Vector2, Vector2>> edgesPositional;
     List<GameObject> corridorTiles;
     List<GameObject> corridorWallTiles;
+    List<Vector2> roomEntrancesToSealOff;
     GameObject CorridorTile;
     GameObject WallTile;
     GameObject CorridorTileParent;
@@ -24,6 +25,12 @@ public class PointToPointWalker : MonoBehaviour
             {
                 if (room.ConvertWallToFloorTile(curPos))
                 {
+                    if (!roomEntrancesToSealOff.Contains(curPos))
+                    {
+                        //Debug.LogWarning("ADDING " + curPos + " to exposed room tiles");
+                        roomEntrancesToSealOff.Add(curPos);
+                    }
+                    
                     return false;
                 }
             }
@@ -35,14 +42,27 @@ public class PointToPointWalker : MonoBehaviour
             }
         }
 
-        
+
         //check for pre-existing corridor tiles in this position
         //this is done in O(n), but could be reduced to approx. O(log n) via binary search.
-        foreach (GameObject tile in corridorTiles)
+        if (isCorridorFloor)
         {
-            if (curPos == (Vector2)tile.transform.position)
+            foreach (GameObject tile in corridorTiles)
             {
-                return false;
+                if (curPos == (Vector2)tile.transform.position)
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            foreach (GameObject tile in corridorWallTiles)
+            {
+                if (curPos == (Vector2)tile.transform.position)
+                {
+                    return false;
+                }
             }
         }
 
@@ -101,15 +121,12 @@ public class PointToPointWalker : MonoBehaviour
             }
         }
     }
-    
-    void GenerateWalls(ref List<Room> rooms)
-    {
-        //checks the neighbouring 8 tiles (moore neighbourhood) surrounding a corridor tile to determine if a wall can be placed there
-        
 
-        GameObject curTile;
-        Vector2 curPos;
-        Vector2 offset = new Vector2(UNIT, UNIT);
+    void PlaceWallIfValid(ref List<Room> rooms, ref Vector2 curPos)
+    {
+        //checking all 8 directions is redundant and causes duplicate walls to spawn within eachother
+        //this does, however, mean that corners of corridors will not be sealed off
+        //this shouldn't matter for practicality, but affects asthetic.
 
         //XY
         //AB,AC, BA, BB, BC, CA, CB, CC (AA is redundant since it is the tile's position)
@@ -117,55 +134,77 @@ public class PointToPointWalker : MonoBehaviour
         //B = 1
         //C = -1
         // character determines how the offset should be multiplied for X and Y respectfully in order to be checked
-        string checkingOrder = "ABACBABBBCCACBCC";
+        GameObject curTile;
+        //string checkingOrder = "ABACBABBBCCACBCC";//checks the neighbouring 8 tiles (moore neighbourhood) surrounding a corridor tile to determine if a wall can be placed there
+        string checkingOrder = "ABACBACA";//4-directional check
 
-        foreach (GameObject corridor in corridorTiles)
+        Vector2 offset = new Vector2(UNIT, UNIT);
+
+        for (int i = 1; i <= checkingOrder.Length; i += 2)
         {
-            curPos = corridor.transform.position;
+            Vector2 tempPos = Vector2.zero;
 
-            for (int i = 1; i <= checkingOrder.Length; i += 2)
+            //configure X
+            switch (checkingOrder[i - 1])
             {
-                Vector2 tempPos = Vector2.zero;
+                case 'B':
+                    tempPos = Vector2.right * offset;
+                    break;
+                case 'C':
+                    tempPos = Vector2.left * offset;
+                    break;
+            }
 
-                //configure X
-                switch (checkingOrder[i - 1])
-                {
-                    case 'B':
-                        tempPos = Vector2.right * offset;
-                        break;
-                    case 'C':
-                        tempPos = Vector2.left * offset;
-                        break;
-                }
+            //configure Y
+            switch (checkingOrder[i])
+            {
+                case 'B':
+                    tempPos = tempPos + (Vector2.up * offset);
+                    break;
+                case 'C':
+                    tempPos = tempPos + (Vector2.down * offset);
+                    break;
+            }
 
-                //configure Y
-                switch (checkingOrder[i])
-                {
-                    case 'B':
-                        tempPos = tempPos + (Vector2.up * offset);
-                        break;
-                    case 'C':
-                        tempPos = tempPos + (Vector2.down * offset);
-                        break;
-                }
+            //add the offset to the current position
+            tempPos = curPos + tempPos;
 
-                //add the offset to the current position
-                tempPos = curPos + tempPos;
-
-                if (IsValidPlacement(ref tempPos, ref rooms,false))
-                {
-                    curTile = Instantiate(WallTile);
-                    curTile.transform.position = tempPos;
-                    curTile.transform.parent = WallTileParent.transform;
-                    corridorWallTiles.Add(curTile);
-                }
-
+            if (IsValidPlacement(ref tempPos, ref rooms, false))
+            {
+                curTile = Instantiate(WallTile);
+                curTile.transform.position = tempPos;
+                curTile.transform.parent = WallTileParent.transform;
+                corridorWallTiles.Add(curTile);
             }
         }
     }
 
+    void BeginWallGeneration(ref List<Room> rooms)
+    {
+        
+        
+        Vector2 curPos;
+        Vector2 offset = new Vector2(UNIT, UNIT);
+
+        //check each corridor tile
+        foreach (GameObject corridor in corridorTiles)
+        {
+            curPos = corridor.transform.position;
+            PlaceWallIfValid(ref rooms,ref curPos);
+        }
+
+        //seal off any uncovered entrances
+        foreach (Vector2 position in roomEntrancesToSealOff)
+        {
+            curPos = position;
+            PlaceWallIfValid(ref rooms, ref curPos);
+        }
+
+    }
+
     public void Exec(float unit,Sprite corridorTile,Sprite wallTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
     {
+        roomEntrancesToSealOff = new List<Vector2>();
         edgesPositional = new List<Tuple<Vector2, Vector2>>();
         corridorTiles = new List<GameObject>();
         UNIT = unit;
@@ -211,7 +250,7 @@ public class PointToPointWalker : MonoBehaviour
         WallTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
 
         Debug.Log("Corridors generated, adding surrounding walls...");
-        GenerateWalls(ref rooms);
+        BeginWallGeneration(ref rooms);
 
         //----------------------------------------------------------------
 
