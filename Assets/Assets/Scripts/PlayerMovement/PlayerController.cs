@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     
     float moveX = 0.0f;
     float moveY = 0.0f;
-    float velocityMult = 3.0f;
+    float velocityMult = 10.0f;
 
 
     // Start is called before the first frame update

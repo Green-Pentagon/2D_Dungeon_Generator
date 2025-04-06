@@ -45,17 +45,15 @@ public class PointToPointWalker : MonoBehaviour
 
         //check for pre-existing corridor tiles in this position
         //this is done in O(n), but could be reduced to approx. O(log n) via binary search.
-        if (isCorridorFloor)
+        foreach (GameObject tile in corridorTiles)
         {
-            foreach (GameObject tile in corridorTiles)
+            if (curPos == (Vector2)tile.transform.position)
             {
-                if (curPos == (Vector2)tile.transform.position)
-                {
-                    return false;
-                }
+                return false;
             }
         }
-        else
+
+        if (!isCorridorFloor)
         {
             foreach (GameObject tile in corridorWallTiles)
             {
@@ -247,6 +245,7 @@ public class PointToPointWalker : MonoBehaviour
         WallTile.name = "Wall";
         WallTile.AddComponent<SpriteRenderer>();
         WallTile.GetComponent<SpriteRenderer>().sprite = wallTile;
+        WallTile.AddComponent<BoxCollider2D>();
         WallTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
 
         Debug.Log("Corridors generated, adding surrounding walls...");

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class Configure : MonoBehaviour
 {
     //Class attributes
     //----------------------------------
+    public GameObject PlayerPrefab;
     public float UnitSize = 1.0f;
     private float UNIT_SIZE;
     public Sprite DebugFloorTile;
@@ -223,6 +225,15 @@ public class Configure : MonoBehaviour
         deltaTimeExec = new System.TimeSpan(System.DateTime.Now.Ticks - timeStart);
         
         print("--DUNGEON GENERATOR SCRIPT FINISHED (" + deltaTimeExec.TotalSeconds + " seconds)--");
+
+        print("Spawning Player (if set in Config Script)...");
+        if (PlayerPrefab != null)
+        {
+            GameObject Plr = Instantiate(PlayerPrefab);
+            Plr.transform.position = (Vector3)rooms.ElementAt(0).GetRoomCentre() + Vector3.back;
+        }
+
+
     }
 
 

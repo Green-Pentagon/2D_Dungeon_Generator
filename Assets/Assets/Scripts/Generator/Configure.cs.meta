@@ -3,7 +3,10 @@ guid: 2d37150970e52454dbf2d459bbcfdebc
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PlayerPrefab: {instanceID: 0}
+  - DebugFloorTile: {instanceID: 0}
+  - DebugWallTile: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
