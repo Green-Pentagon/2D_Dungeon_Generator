@@ -16,13 +16,16 @@ public class PointToPointWalker : MonoBehaviour
     GameObject CorridorTileParent;
     GameObject WallTileParent;
 
-    bool IsValidPlacement(ref Vector2 curPos, ref List<Room> rooms)
+    bool IsValidPlacement(ref Vector2 curPos, ref List<Room> rooms, bool isCorridorFloor)
     {
         foreach (Room room in rooms)
         {
-            if (room.ConvertWallToFloorTile(curPos))
+            if (isCorridorFloor)
             {
-                return false;
+                if (room.ConvertWallToFloorTile(curPos))
+                {
+                    return false;
+                }
             }
 
             if (room.Overlapping(curPos))
@@ -68,7 +71,7 @@ public class PointToPointWalker : MonoBehaviour
                     curPos.x -= UNIT;
                 }
 
-                if (IsValidPlacement(ref curPos, ref rooms))
+                if (IsValidPlacement(ref curPos, ref rooms,true))
                 {
                     curTile = Instantiate(CorridorTile);
                     curTile.transform.position = curPos;
@@ -88,7 +91,7 @@ public class PointToPointWalker : MonoBehaviour
                     curPos.y -= UNIT;
                 }
 
-                if (IsValidPlacement(ref curPos, ref rooms))
+                if (IsValidPlacement(ref curPos, ref rooms, true))
                 {
                     curTile = Instantiate(CorridorTile);
                     curTile.transform.position = curPos;
@@ -149,7 +152,7 @@ public class PointToPointWalker : MonoBehaviour
                 //add the offset to the current position
                 tempPos = curPos + tempPos;
 
-                if (IsValidPlacement(ref tempPos, ref rooms))
+                if (IsValidPlacement(ref tempPos, ref rooms,false))
                 {
                     curTile = Instantiate(WallTile);
                     curTile.transform.position = tempPos;
