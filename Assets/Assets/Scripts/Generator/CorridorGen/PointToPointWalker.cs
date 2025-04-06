@@ -10,8 +10,11 @@ public class PointToPointWalker : MonoBehaviour
     float UNIT;
     List<Tuple<Vector2, Vector2>> edgesPositional;
     List<GameObject> corridorTiles;
-    GameObject Tile;
-    GameObject TileParent;
+    List<GameObject> corridorWallTiles;
+    GameObject CorridorTile;
+    GameObject WallTile;
+    GameObject CorridorTileParent;
+    GameObject WallTileParent;
 
     bool IsValidPlacement(ref Vector2 curPos, ref List<Room> rooms)
     {
@@ -67,9 +70,9 @@ public class PointToPointWalker : MonoBehaviour
 
                 if (IsValidPlacement(ref curPos, ref rooms))
                 {
-                    curTile = Instantiate(Tile);
+                    curTile = Instantiate(CorridorTile);
                     curTile.transform.position = curPos;
-                    curTile.transform.parent = TileParent.transform;
+                    curTile.transform.parent = CorridorTileParent.transform;
                     corridorTiles.Add(curTile);
                 }
             }
@@ -87,41 +90,135 @@ public class PointToPointWalker : MonoBehaviour
 
                 if (IsValidPlacement(ref curPos, ref rooms))
                 {
-                    curTile = Instantiate(Tile);
+                    curTile = Instantiate(CorridorTile);
                     curTile.transform.position = curPos;
-                    curTile.transform.parent = TileParent.transform;
+                    curTile.transform.parent = CorridorTileParent.transform;
                     corridorTiles.Add(curTile);
                 }
             }
         }
     }
     
+    void GenerateWalls(ref List<Room> rooms)
+    {
+        GameObject curTile;
+        Vector2 curPos;
+        Vector2 offset = new Vector2(UNIT, UNIT);
+
+        //XY
+        //AB,AC, BA, BB, BC, CA, CB, CC
+        //A = 0
+        //B = 1
+        //C = -1
+        // character determines how the offset should be multiplied for X and Y respectfully in order to be checked
+        string checkingOrder = "ABACBABBBCCACBCC";
+
+        foreach (GameObject corridor in corridorTiles)
+        {
+            curPos = corridor.transform.position;
+
+            for (int i = 1; i <= checkingOrder.Length; i += 2)
+            {
+                Vector2 tempPos = Vector2.zero;
+
+                //configure X
+                switch (checkingOrder[i - 1])
+                {
+                    case 'B':
+                        tempPos = Vector2.right * offset;
+                        break;
+                    case 'C':
+                        tempPos = Vector2.left * offset;
+                        break;
+                }
+
+                //configure Y
+                switch (checkingOrder[i])
+                {
+                    case 'B':
+                        tempPos = tempPos * Vector2.up * offset;
+                        break;
+                    case 'C':
+                        tempPos = tempPos * Vector2.down * offset;
+                        break;
+                }
+
+                tempPos = curPos + tempPos;
+
+                if (IsValidPlacement(ref tempPos, ref rooms))
+                {
+                    curTile = Instantiate(WallTile);
+                    curTile.transform.position = tempPos;
+                    curTile.transform.parent = WallTileParent.transform;
+                    corridorWallTiles.Add(curTile);
+                }
+
+            }
+
+            //if (IsValidPlacement(ref curPos, ref rooms))
+            //{
+            //    //curTile = Instantiate(CorridorTile);
+            //    //curTile.transform.position = curPos;
+            //    //curTile.transform.parent = CorridorTileParent.transform;
+            //    //corridorTiles.Add(curTile);
+            //}
+        }
+    }
+
     public void Exec(float unit,Sprite corridorTile,List<Room> rooms, List<Tuple<int, int, float>> edgeList, ref GameObject parentObject)
     {
         edgesPositional = new List<Tuple<Vector2, Vector2>>();
         corridorTiles = new List<GameObject>();
         UNIT = unit;
-        TileParent = new GameObject();
-        TileParent.name = "Corridor Tiles";
-        TileParent.transform.parent = parentObject.transform;
 
-        Tile = new GameObject();
-        Tile.name = "Corridor";
-        Tile.AddComponent<SpriteRenderer>();
-        Tile.GetComponent<SpriteRenderer>().sprite = corridorTile;
-        Tile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
+        //instantiate corridor parent game object
+        CorridorTileParent = new GameObject();
+        CorridorTileParent.name = "Corridor Tiles";
+        CorridorTileParent.transform.parent = parentObject.transform;
+
+        //instantiate template corridor tile game object
+        CorridorTile = new GameObject();
+        CorridorTile.name = "Corridor";
+        CorridorTile.AddComponent<SpriteRenderer>();
+        CorridorTile.GetComponent<SpriteRenderer>().sprite = corridorTile;
+        CorridorTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
 
 
+
+        //----------------------------------------------------------------
         Debug.Log("Populating PointToPoint Walker's pathing...");
         foreach (Tuple<int, int, float> edge in edgeList)
         {
             edgesPositional.Add(new Tuple<Vector2, Vector2>(rooms.ElementAt(edge.Item1).GetRoomCentre(), rooms.ElementAt(edge.Item1).GetRoomCentre() - rooms.ElementAt(edge.Item2).GetRoomCentre()));
             //edgesPositional.Add(new Tuple<int, int, Vector2>(edge.Item1, edge.Item2, rooms.ElementAt(edge.Item1).GetRoomCentre() + rooms.ElementAt(edge.Item2).GetRoomCentre()));
         }
+        //----------------------------------------------------------------
         Debug.Log("Path list populated, beginning Walk...");
         Walk(ref rooms);
-        Debug.Log("Walk Complete, Cleaning Up...");
+        
+        //----------------------------------------------------------------
+
+        //instantiate wall parent game object
+        corridorWallTiles = new List<GameObject>();
+        WallTileParent = new GameObject();
+        WallTileParent.name = "Corridor Wall Tiles";
+        WallTileParent.transform.parent = parentObject.transform;
+
+        //instantiate wall template object
+        WallTile = new GameObject();
+        WallTile.name = "Wall";
+        WallTile.AddComponent<SpriteRenderer>();
+        WallTile.GetComponent<SpriteRenderer>().sprite = corridorTile;
+        WallTile.GetComponent<Transform>().localScale = new Vector3(1.0f * unit, 1.0f * unit, 1.0f);
+
+        Debug.Log("Corridors generated, adding surrounding walls...");
+        GenerateWalls(ref rooms);
+
+        //----------------------------------------------------------------
+
+        Debug.Log("Walker Processes Complete, Cleaning Up...");
         //DestroyImmediate tiles which intersect rooms and oneanother
-        DestroyImmediate(Tile);
+        DestroyImmediate(CorridorTile);
+        DestroyImmediate(WallTile);
     }
 }
