@@ -236,19 +236,31 @@ PrefabInstance:
       objectReference: {fileID: 6958063145120769792, guid: 98c3cfdf87b6fd84fb984329460c1d8a, type: 3}
     - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomWidth
-      value: 41
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: minRoomWidth
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadX
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: spawnSpreadY
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: DebugWallTile
+      value: 
+      objectReference: {fileID: 21300000, guid: 9b3b6080de59c014998d2b1768b5f3a5, type: 3}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: maxRoomHeight
-      value: 42
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
+      propertyPath: minRoomHeight
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4577717125163968094, guid: 8f714c61a59247341a81c725f6826e6d, type: 3}
       propertyPath: numberOfRooms
