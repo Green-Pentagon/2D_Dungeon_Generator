@@ -71,6 +71,8 @@ public class Room : IComparable
                     //convert wall into floor
                     roomObj.transform.GetChild(0).GetChild(wallIndex).GetComponent<SpriteRenderer>().sprite = roomObj.transform.GetChild(1).GetChild(0).GetComponent<SpriteRenderer>().sprite;
                     roomObj.transform.GetChild(0).GetChild(wallIndex).GetComponent<BoxCollider2D>().enabled = false;
+                    
+                    
                     //Debug.LogWarning(roomId + ": wall to floor convertion needed");
                     return true;
                     
@@ -92,8 +94,16 @@ public class Room : IComparable
         // (roomCentre.y + (roomExtends.y * UNIT)) >= position.y
         // (roomCentre.y - (roomExtends.y * UNIT)) <= position.y
 
-        if ((roomCentre.x + (roomExtends.x * UNIT)- UNIT) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
-        (roomCentre.y + (roomExtends.y * UNIT) - UNIT) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
+        if (width % UNIT == 0)
+        {
+            //0.5f* UNIT, else idk just yet
+            //do same for height
+            //stupid thing
+        }
+
+
+        if ((roomCentre.x + (roomExtends.x * UNIT)- (0.5f*UNIT)) >= position.x && (roomCentre.x - (roomExtends.x * UNIT)) <= position.x &&
+        (roomCentre.y + (roomExtends.y * UNIT) - (0.5f*UNIT)) >= position.y && (roomCentre.y - (roomExtends.y * UNIT)) <= position.y)
         {
             return true;
         }
