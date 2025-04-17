@@ -76,7 +76,18 @@ public class Configure : MonoBehaviour
     [ExecuteInEditMode]
     void OnValidate()
     {
+        if (UnitSize <= 0)
+        {
+            UnitSize = 0.01f;
+        }
+        else if (UnitSize >= 100)
+        {
+            UnitSize = 100;
+        }
+        
+
         UNIT_SIZE = UnitSize;
+
         if (minRoomWidth > maxRoomWidth && maxRoomWidth != roomWidthRange[1])
         {
             maxRoomWidth = minRoomWidth;
