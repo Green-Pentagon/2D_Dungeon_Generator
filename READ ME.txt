@@ -1,0 +1,27 @@
+-------------------
+DISCLAIMER:
+
+The exported package will default the wall texture to 'debug_player' instead of 'debug_wall' when 
+This bug is only cosmetic and can be easily changed after importing: also only occurs when dragging a new instance of the GenerateRoom prefab.
+
+It has not been fixed to preserve the state of the program for assessment purposes.
+
+-------------------
+
+Set up:
+- Open up your unity project (version 2022.3.4 recommended)
+- Right click in the unity's file explorer and select 'Import Package' then 'Custom Package'
+- Select the '2D_Dungeon_Gen_1.0.unitypackage' package to import.
+- Select everything and confirm.
+- Unity may warn you that the default scene has the same GUID as a scene inside of the package: it will automatically assign it a new GUID when the project is re-opened.
+
+-------------------
+
+How to Use:
+- Within the package folder, in the 'Assets' folder, you will find 'RoomGenerator' prefab.
+- Either open the sample scene provided in the 'Scenes' folder (SetUpGenScene scene) OR Drag this prefab into any currently open scene.
+- Select the prefab and look in the inspector menu, you will see the number of parameters you can configure.
+- Click the 'Generate'
+- To save any output generated, simply select the dungeon game object in the scene and drag it into the unity file browser, within any directory you desire.
+
+-------------------
